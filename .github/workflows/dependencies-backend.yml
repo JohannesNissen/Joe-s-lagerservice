@@ -1,0 +1,53 @@
+name: Backend Dependency Merger
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+    branches:
+      - dependencies
+
+env:
+  dotnet-version: 6.0.x
+
+jobs:
+  build-backend:
+    name: Full build validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+
+      - run: dotnet restore
+        working-directory: backend
+
+      - run: dotnet build --no-restore
+        working-directory: backend
+
+      - run: dotnet test --no-build --verbosity normal
+        working-directory: backend
+  merge-backend:
+    name: Merge backend
+    runs-on: ubuntu-latest
+    permissions: write-all
+    needs: build-backend
+
+    steps:
+      - uses: actions/checkout@master
+        name: Checkout
+
+      - uses: actions/setup-node@v3.1.0
+        with:
+          node-version: "16"
+
+      - run: npm i
+        working-directory: ./.github/actions/mergeDependencies
+
+      - name: Auto merge
+        uses: ./.github/actions/mergeDependencies
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

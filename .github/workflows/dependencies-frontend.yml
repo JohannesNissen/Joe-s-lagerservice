@@ -1,0 +1,54 @@
+name: Frontend Dependency Merger
+
+on:
+  pull_request:
+    paths:
+      - "frontend/**"
+    branches:
+      - dependencies
+
+env:
+  node-version: "16"
+
+jobs:
+  build-frontend:
+    name: Full build validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3.1.0
+        with:
+          node-version: ${{ env.node-version }}
+
+      - run: npm ci
+        working-directory: frontend
+
+      - run: npm run build
+        working-directory: frontend
+
+      - run: npm run test:headless
+        working-directory: frontend
+
+  merge-frontend:
+    name: Merge frontend
+    runs-on: ubuntu-latest
+    permissions: write-all
+    needs: build-frontend
+
+    steps:
+      - uses: actions/checkout@master
+        name: Checkout
+
+      - uses: actions/setup-node@v3.1.0
+        with:
+          node-version: "16"
+
+      - run: npm i
+        working-directory: ./.github/actions/mergeDependencies
+
+      - name: Auto merge
+        uses: ./.github/actions/mergeDependencies
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

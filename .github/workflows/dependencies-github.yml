@@ -1,0 +1,30 @@
+name: GitHub Actions Dependency Merger
+
+on:
+  pull_request:
+    paths:
+      - ".github/**"
+    branches:
+      - dependencies
+
+jobs:
+  merge-github:
+    name: Merge github actions
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - uses: actions/checkout@master
+        name: Checkout
+
+      - uses: actions/setup-node@v3.1.0
+        with:
+          node-version: "16"
+
+      - run: npm i
+        working-directory: ./.github/actions/mergeDependencies
+
+      - name: Auto merge
+        uses: ./.github/actions/mergeDependencies
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

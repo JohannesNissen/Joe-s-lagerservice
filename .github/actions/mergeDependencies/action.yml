@@ -1,0 +1,10 @@
+name: "Merge Pull-Request"
+description: "Merges the pull request based on action owner"
+inputs:
+  token:
+    description: "GitHub token"
+    required: true
+
+runs:
+  using: "node16"
+  main: "index.js"
