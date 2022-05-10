@@ -1,7 +1,9 @@
 using Application.Common.Interfaces;
+using Application.Common.Options;
 using FluentValidation.AspNetCore;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -15,8 +17,10 @@ namespace Web
   public static class WebServiceConfiguration
   {
 
-    public static void ConfigureServices(IServiceCollection services)
+    public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+
+      services.Configure<EncryptionOptions>(configuration.GetSection(EncryptionOptions.Encryption));
 
       services.AddCors(options =>
       {

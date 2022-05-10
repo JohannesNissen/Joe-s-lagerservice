@@ -49,6 +49,9 @@
     "editor.formatOnSaveMode": "file",
     "plantuml.server": "https://www.plantuml.com/plantuml",
     "files.eol": "\n",
-    "files.insertFinalNewline": true
+    "files.insertFinalNewline": true,
+    "cSpell.words": [
+      "encryptor"
+    ]
   }
 }

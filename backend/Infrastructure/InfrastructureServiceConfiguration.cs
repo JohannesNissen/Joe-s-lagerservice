@@ -26,6 +26,8 @@ namespace Infrastructure
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
         services.AddTransient<IDateTimeOffsetService, DateTimeOffsetService>();
+        services.AddSingleton<IEncryptionService, EncryptionService>();
+        services.AddSingleton<IImageService, LocalImageService>();
       }
 
 

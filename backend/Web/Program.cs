@@ -3,7 +3,6 @@ using Application;
 using Application.Common.SignalR.Hubs;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -21,7 +20,7 @@ builder.Logging.AddAzureWebAppDiagnostics();
 
 ApplicationServiceConfiguration.ConfigureServices(builder.Services);
 InfrastructureServiceConfiguration.ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
-WebServiceConfiguration.ConfigureServices(builder.Services);
+WebServiceConfiguration.ConfigureServices(builder.Services, builder.Configuration);
 
 
 var app = builder.Build();
