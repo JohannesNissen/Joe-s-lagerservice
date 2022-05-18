@@ -573,13 +573,11 @@ export class ItemFetchClient extends ClientBase {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    item_CreateItem(command: CreateItemCommand, files?: FileParameter[] | null | undefined, signal?: AbortSignal | undefined): Promise<number> {
+    item_CreateItem(command: CreateItemCommand, signal?: AbortSignal | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/Item";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = new FormData();
-        if (files !== null && files !== undefined)
-            files.forEach(item_ => content_.append("files", item_.data, item_.fileName ? item_.fileName : "files") );
+        const content_ = JSON.stringify(command);
 
         let options_: RequestInit = {
             body: content_,
@@ -870,7 +868,6 @@ export interface CreateItemCommand {
     totalInStock?: number;
     amountLentOut?: number;
     usedInOffice?: number;
-    imageFiles?: string[] | null;
 }
 
 export interface ImageIdDto {

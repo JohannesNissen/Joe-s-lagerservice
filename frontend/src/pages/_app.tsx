@@ -2,6 +2,8 @@ import "../styles.global.css";
 import "isomorphic-unfetch";
 
 import { ChakraProvider } from "@chakra-ui/react";
+import { ItemContext } from "contexts/ItemContext";
+import useItemContext from "contexts/useItemContext";
 import type { AppProps, NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
 import { I18nProvider } from "next-rosetta";
@@ -18,10 +20,12 @@ export function reportWebVitals(metric: NextWebVitalsMetric): void {
 const MyApp = ({ Component, pageProps, __N_SSG }: AppProps): ReactElement => {
   // usePWA(); //! OPT IN
 
+  const itemContextValue = useItemContext();
+
   return (
     <main>
       <Head>
-        <title>APPNAMEHERE</title>
+        <title>LagerService</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#2196f3" />
@@ -40,7 +44,9 @@ const MyApp = ({ Component, pageProps, __N_SSG }: AppProps): ReactElement => {
             {theme => {
               return (
                 <ChakraProvider theme={theme}>
-                  <Component {...pageProps} />
+                  <ItemContext.Provider value={itemContextValue}>
+                    <Component {...pageProps} />
+                  </ItemContext.Provider>
                 </ChakraProvider>
               );
             }}
