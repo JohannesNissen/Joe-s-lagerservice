@@ -10,7 +10,7 @@ namespace Web.Controllers
   public class ItemController : ApiControllerBase
   {
     [HttpPost]
-    public async Task<ActionResult<int>> CreateItem([FromBody] CreateItemCommand command, ICollection<IFormFile> files, CancellationToken cancellationToken)
+    public async Task<ActionResult<int>> CreateItem([FromBody] CreateItemCommand command, CancellationToken cancellationToken)
     {
       return await Mediator.Send(command, cancellationToken);
     }

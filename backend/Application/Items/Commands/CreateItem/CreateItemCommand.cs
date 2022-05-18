@@ -6,8 +6,6 @@ using Domain.Entities;
 using Application.Common.Interfaces;
 using Application.Common.Exceptions;
 using Application.Common.Security;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 
 namespace Application.Items.Commands.CreateItem
 {
@@ -19,7 +17,6 @@ namespace Application.Items.Commands.CreateItem
     public int TotalInStock { get; set; }
     public int AmountLentOut { get; set; }
     public int UsedInOffice { get; set; }
-    public List<IFormFile> ImageFiles { get; set; }
 
     public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, int>
     {
