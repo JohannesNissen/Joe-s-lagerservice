@@ -15,6 +15,6 @@ namespace Domain.Entities
     public string Password { get; set; }
     public UserRole UserRole { get; set; }
 
-    public virtual ICollection<Item> ItemsLent { get; set; }
+    public virtual ICollection<BorrowedItem> ItemsLent { get; set; }
   }
 }

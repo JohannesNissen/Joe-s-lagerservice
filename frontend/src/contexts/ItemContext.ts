@@ -7,5 +7,9 @@ export const ItemContext = createContext<ItemContextType>({
   items: [],
   fetchItems: async () => {
     return;
+  },
+  itemDetails: {},
+  fetchItemDetails: async (itemId: number) => {
+    return null;
   }
 });

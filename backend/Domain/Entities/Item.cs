@@ -12,6 +12,7 @@ namespace Domain.Entities
     public int UsedInOffice { get; set; }
     public int AmountLentOut { get; set; }
     public virtual List<Image> Images { get; set; }
+    public virtual ICollection<BorrowedItem> Borrowed { get; set; }
 
   }
 }

@@ -734,6 +734,45 @@ export class ItemFetchClient extends ClientBase {
         }
         return Promise.resolve<FileResponse>(null as any);
     }
+
+    item_GetItemDetails(itemId: number, signal?: AbortSignal | undefined): Promise<ItemDetailsDto> {
+        let url_ = this.baseUrl + "/api/Item/{itemId}";
+        if (itemId === undefined || itemId === null)
+            throw new Error("The parameter 'itemId' must be defined.");
+        url_ = url_.replace("{itemId}", encodeURIComponent("" + itemId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processItem_GetItemDetails(_response));
+        });
+    }
+
+    protected processItem_GetItemDetails(response: Response): Promise<ItemDetailsDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ItemDetailsDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ItemDetailsDto>(null as any);
+    }
 }
 
 export class UserFetchClient extends ClientBase {
@@ -887,21 +926,70 @@ export interface EditItemDto {
 }
 
 export interface ItemIdDto {
+    id?: number;
+    name?: string | null;
+    amountAvailable?: number;
+}
+
+export interface ItemDetailsDto extends ItemIdDto {
+    borrowedItems?: BorrowedItem[] | null;
+    totalInStock?: number;
+    usedInOffice?: number;
+    amountLentOut?: number;
+    item?: Item | null;
+}
+
+export interface AuditableEntity {
+    createdBy?: string | null;
+    created?: Date;
+    lastModifiedBy?: string | null;
+    lastModified?: Date | null;
+}
+
+export interface BorrowedItem extends AuditableEntity {
+    id?: number;
+    user?: User | null;
+    startDate?: Date;
+    expirationDate?: Date;
+    item?: Item | null;
+    amount?: number;
+}
+
+export interface User extends AuditableEntity {
+    id?: number;
+    email?: string | null;
+    password?: string | null;
+    userRole?: UserRole;
+    itemsLent?: BorrowedItem[] | null;
+}
+
+export enum UserRole {
+    Admin = 0,
+    User = 1,
+}
+
+export interface Item extends AuditableEntity {
+    id?: number;
     name?: string | null;
     totalInStock?: number;
     usedInOffice?: number;
     amountLentOut?: number;
+    images?: Image[] | null;
+    borrowed?: BorrowedItem[] | null;
+}
+
+export interface Image extends AuditableEntity {
+    id?: number;
+    itemId?: number;
+    index?: number;
+    filePath?: string | null;
+    item?: Item | null;
 }
 
 export interface CreateUserCommand {
     email?: string | null;
     password?: string | null;
     userRole?: UserRole;
-}
-
-export enum UserRole {
-    Admin = 0,
-    User = 1,
 }
 
 export interface UserIdDto {

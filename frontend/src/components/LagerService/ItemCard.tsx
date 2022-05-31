@@ -48,7 +48,7 @@ const ItemCard: FC<Props> = ({ item }) => {
               fontSize={"sm"}
               rounded={"full"}
               color={"#222330"}
-              onClick={() => router.push(`/gallery/${item.name}/`)}>
+              onClick={() => router.push(`/gallery/${item.id}/`)}>
               Redigér
             </Button>
           </Stack>

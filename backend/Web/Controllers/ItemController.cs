@@ -3,6 +3,7 @@ using Application.Items.Commands.CreateItem;
 using Application.Items.Commands.EditItem;
 using Application.Items.Commands.UploadImage;
 using Application.Items.Queries.GetAllItems;
+using Application.Items.Queries.GetItemDetails;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -41,7 +42,13 @@ namespace Web.Controllers
     [HttpGet]
     public async Task<ActionResult<List<ItemIdDto>>> GetAllItems(CancellationToken cancellationToken)
     {
-      return await Mediator.Send(new GetAllItemsQuery());
+      return await Mediator.Send(new GetAllItemsQuery(), cancellationToken);
+    }
+
+    [HttpGet("{itemId}")]
+    public async Task<ActionResult<ItemDetailsDto>> GetItemDetails([FromRoute] int itemId, CancellationToken cancellationToken)
+    {
+      return await Mediator.Send(new GetItemDetailsQuery { Id = itemId }, cancellationToken);
     }
   }
 }
