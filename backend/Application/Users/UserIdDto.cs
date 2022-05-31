@@ -8,7 +8,8 @@ namespace Application.Users
 {
   public class UserIdDto : IAutoMap<User>
   {
-    public int Name { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; }
     public string Email { get; set; }
     public UserRole UserRole { get; set; }
   }
