@@ -951,7 +951,8 @@ export enum UserRole {
 }
 
 export interface UserIdDto {
-    name?: number;
+    id?: number;
+    name?: string | null;
     email?: string | null;
     userRole?: UserRole;
 }
