@@ -16,7 +16,7 @@ type Props = {
 const PeopleBorrowing: FC<Props> = ({ PeopleBorrowing }) => {
   return (
     <React.Fragment>
-      <Table variant="simple" size="sm" maxW="30%">
+      <Table variant="simple" size="sm">
         <TableCaption>These poeple have borrowed this item</TableCaption>
         <Thead>
           <Tr>
@@ -49,24 +49,10 @@ const PeopleBorrowing: FC<Props> = ({ PeopleBorrowing }) => {
                   <Text>{person.user.email}</Text>
                 </Td>
                 <Td textAlign="center">{person.startDate}</Td>
-                {/* <Tooltip label={event.path}>
-                <Td cursor="pointer" textAlign="center" onClick={() => router.push(event.path)}>
-                  <Text>Link</Text>
-                </Td>
-                </Tooltip> */}
                 <Td textAlign="center">{person.expirationDate}</Td>
-                <Td textAlign="center">{person.amount}</Td>
-                {/* <Td textAlign="center">
-                <Flex>
-                  <Button
-                    flex={1}
-                    fontSize={"sm"}
-                    color={"#222330"}
-                    onClick={() => router.push(`/events/edit/${event.languageCode}/${event.id}`)}>
-                    Redigér
-                  </Button>
-                </Flex> 
-                </Td>);*/}
+                <Td textAlign="center" isNumeric>
+                  {person.amount}
+                </Td>
               </Tr>
             </React.Fragment>
           ))}

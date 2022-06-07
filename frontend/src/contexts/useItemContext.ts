@@ -1,10 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { client } from "services/backend/client";
-import { ItemDetailsDto, ItemFetchClient, ItemIdDto } from "services/backend/client.generated";
+import {
+  CreateItemCommand,
+  ItemDetailsDto,
+  ItemFetchClient,
+  ItemIdDto
+} from "services/backend/client.generated";
 
 export interface ItemContextType {
   items: ItemIdDto[];
   fetchItems: () => Promise<void>;
+  saveNewItem: (command: CreateItemCommand) => Promise<void>;
   itemDetails: ItemDetailsDto;
   fetchItemDetails: (itemId: number) => Promise<void>;
 }
@@ -22,6 +28,20 @@ const useItemContext: () => ItemContextType = () => {
     dispatchItems(fetchedItems);
   }, []);
 
+  const saveNewItem = useCallback(async (command: CreateItemCommand) => {
+    const itemClient = await client(ItemFetchClient);
+    await itemClient.item_CreateItem(command).then(response => {
+      const item: ItemIdDto = {
+        id: response,
+        totalInStock: command.amountBought,
+        usedInOffice: command.reserveForOffice,
+        borrowable: command.borrowable,
+        name: command.name,
+        description: command.description
+      };
+      dispatchItems(items => [...items, item]);
+    });
+  }, []);
   /**
    * GET /api/Item/{id}
    */
@@ -38,6 +58,7 @@ const useItemContext: () => ItemContextType = () => {
   return {
     items,
     fetchItems,
+    saveNewItem,
     itemDetails,
     fetchItemDetails
   };

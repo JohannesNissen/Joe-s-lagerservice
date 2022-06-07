@@ -30,11 +30,11 @@ const ItemCard: FC<Props> = ({ item }) => {
           <Box borderWidth="1px" borderRadius="lg" width="80%" height="60%">
             Image goes here
           </Box>
-          <Text fontWeight={600} color={"gray.500"} size="sm" mb={4}>
+          {/* <Text fontWeight={600} color={"gray.500"} size="sm" mb={4}>
             {`Total amount: ${item.totalInStock}`}
-          </Text>
+          </Text> */}
           <Text fontWeight={600} color={"gray.500"} size="sm" mb={4}>
-            {`Amount in use: ${item.amountLentOut + item.usedInOffice}`}
+            {`Amount avaibable: ${item.totalInStock - item.amountLentOut - item.usedInOffice}`}
           </Text>
           <Stack
             width={"100%"}

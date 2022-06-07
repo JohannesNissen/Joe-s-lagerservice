@@ -169,10 +169,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("AmountLentOut")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Borrowable")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("LastModified")

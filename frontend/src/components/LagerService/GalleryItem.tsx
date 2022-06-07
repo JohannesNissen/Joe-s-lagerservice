@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Container, Stack } from "@chakra-ui/react";
-import { FC } from "react";
+import { Flex } from "@chakra-ui/react";
+import React, { FC } from "react";
 import { ItemIdDto } from "services/backend/client.generated";
 import { useSortableData } from "utils/sortTable";
 
@@ -13,17 +13,21 @@ type Props = {
 const GalleryItem: FC<Props> = ({ storage }) => {
   // Used for showing the events
   const { items, requestSort, sortConfig } = useSortableData(storage);
-
+  //TODO unborrowable item shall only be shown for admins
   return (
-    <Container maxW={"8xl"} pt={"60px"}>
-      <Stack direction={"row"} justify={"start"}>
-        <Stack align={"start"} direction={"row"}>
-          {items.map((item, index) => (
-            <ItemCard key={index} item={item} />
-          ))}
-        </Stack>
-      </Stack>
-    </Container>
+    <React.Fragment>
+      <Flex
+        m={"60px 20em"}
+        wrap={"wrap"}
+        justify={"flex-start"}
+        gap={"15px"}
+        align={"center"}
+        direction={"row"}>
+        {items.map((item, index) => (
+          <ItemCard key={index} item={item} />
+        ))}
+      </Flex>
+    </React.Fragment>
   );
 };
 

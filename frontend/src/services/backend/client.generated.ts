@@ -950,9 +950,10 @@ export interface CreateExampleParentCommand {
 
 export interface CreateItemCommand {
     name?: string | null;
-    totalInStock?: number;
-    amountLentOut?: number;
-    usedInOffice?: number;
+    amountBought?: number;
+    reserveForOffice?: number;
+    description?: string | null;
+    borrowable?: boolean;
 }
 
 export interface ImageIdDto {
@@ -974,14 +975,16 @@ export interface EditItemDto {
 export interface ItemIdDto {
     id?: number;
     name?: string | null;
-    amountAvailable?: number;
+    totalInStock?: number;
+    usedInOffice?: number;
+    amountLentOut?: number;
+    description?: string | null;
+    borrowable?: boolean;
 }
 
 export interface ItemDetailsDto extends ItemIdDto {
     borrowedItems?: BorrowedItem[] | null;
-    totalInStock?: number;
-    usedInOffice?: number;
-    amountLentOut?: number;
+    amountAvailable?: number;
     item?: Item | null;
 }
 
@@ -1003,6 +1006,7 @@ export interface BorrowedItem extends AuditableEntity {
 
 export interface User extends AuditableEntity {
     id?: number;
+    name?: string | null;
     email?: string | null;
     password?: string | null;
     userRole?: UserRole;
@@ -1020,6 +1024,8 @@ export interface Item extends AuditableEntity {
     totalInStock?: number;
     usedInOffice?: number;
     amountLentOut?: number;
+    description?: string | null;
+    borrowable?: boolean;
     images?: Image[] | null;
     borrowed?: BorrowedItem[] | null;
 }

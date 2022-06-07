@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Persistence.Migrations
 {
-    public partial class init_migration : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -23,11 +23,34 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Item",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TotalInStock = table.Column<int>(type: "int", nullable: false),
+                    UsedInOffice = table.Column<int>(type: "int", nullable: false),
+                    AmountLentOut = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Borrowable = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Item", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserRole = table.Column<int>(type: "int", nullable: false),
@@ -67,16 +90,14 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "items",
+                name: "Image",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TotalInStock = table.Column<int>(type: "int", nullable: false),
-                    TotalAvailable = table.Column<int>(type: "int", nullable: false),
-                    AmountLentOut = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    Index = table.Column<int>(type: "int", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -84,13 +105,55 @@ namespace Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_items", x => x.Id);
+                    table.PrimaryKey("PK_Image", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_items_Users_UserId",
+                        name: "FK_Image_Item_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Item",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BorrowedItem",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ItemId = table.Column<int>(type: "int", nullable: true),
+                    Amount = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BorrowedItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BorrowedItem_Item_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Item",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BorrowedItem_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BorrowedItem_ItemId",
+                table: "BorrowedItem",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BorrowedItem_UserId",
+                table: "BorrowedItem",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExampleChildren_ParentId",
@@ -98,24 +161,30 @@ namespace Infrastructure.Persistence.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_items_UserId",
-                table: "items",
-                column: "UserId");
+                name: "IX_Image_ItemId",
+                table: "Image",
+                column: "ItemId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BorrowedItem");
+
+            migrationBuilder.DropTable(
                 name: "ExampleChildren");
 
             migrationBuilder.DropTable(
-                name: "items");
+                name: "Image");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "ExampleParents");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Item");
         }
     }
 }
