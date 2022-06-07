@@ -13,10 +13,12 @@ namespace Application.Items.Commands.CreateItem
   [TODOAuthorize]
   public class CreateItemCommand : IRequest<int>
   {
+
     public string Name { get; set; }
-    public int TotalInStock { get; set; }
-    public int AmountLentOut { get; set; }
-    public int UsedInOffice { get; set; }
+    public int AmountBought { get; set; }
+    public int ReserveForOffice { get; set; }
+    public string Description { get; set; }
+    public bool Borrowable { get; set; }
 
     public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, int>
     {
@@ -29,18 +31,20 @@ namespace Application.Items.Commands.CreateItem
 
       public async Task<int> Handle(CreateItemCommand request, CancellationToken cancellationToken)
       {
-        var entity = await _context.Items.FirstOrDefaultAsync(r => r.Name == request.Name, cancellationToken);
+        var entity = await _context.Items.FirstOrDefaultAsync(item => item.Name == request.Name, cancellationToken);
         if (entity != null)
         {
-          throw new BadRequestException("Recipient name", request.Name, "Item with the given name already exists.");
+          throw new BadRequestException("Item name", request.Name, "An item with the given name already exists.");
         }
 
         entity = new Item
         {
           Name = request.Name,
-          TotalInStock = request.TotalInStock,
-          AmountLentOut = request.AmountLentOut,
-          UsedInOffice = request.UsedInOffice
+          TotalInStock = request.AmountBought,
+          AmountLentOut = 0,
+          UsedInOffice = request.ReserveForOffice,
+          Borrowable = request.Borrowable,
+          Description = request.Description
         };
 
         _context.Items.Add(entity);

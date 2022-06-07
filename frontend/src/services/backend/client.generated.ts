@@ -865,9 +865,10 @@ export interface CreateExampleParentCommand {
 
 export interface CreateItemCommand {
     name?: string | null;
-    totalInStock?: number;
-    amountLentOut?: number;
-    usedInOffice?: number;
+    amountBought?: number;
+    reserveForOffice?: number;
+    description?: string | null;
+    borrowable?: boolean;
 }
 
 export interface ImageIdDto {
@@ -891,6 +892,8 @@ export interface ItemIdDto {
     totalInStock?: number;
     usedInOffice?: number;
     amountLentOut?: number;
+    description?: string | null;
+    borrowable?: boolean;
 }
 
 export interface CreateUserCommand {

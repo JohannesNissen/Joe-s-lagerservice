@@ -5,7 +5,8 @@ import ModalRegisterNewItem from "components/LagerService/ModalRegisterNewItem";
 import useItemContext from "contexts/useItemContext";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { CreateItemCommand } from "services/backend/client.generated";
 
 const NewItemHeaders = {
   Choose_operation: "",
@@ -14,10 +15,17 @@ const NewItemHeaders = {
 };
 
 const IndexPage: NextPage = () => {
-  const { items, fetchItems } = useItemContext();
+  const { items, fetchItems, saveNewItem } = useItemContext();
 
   useRouter();
   const [, setDone] = useState<boolean>(false);
+
+  const registerNewItem = useCallback(
+    (command: CreateItemCommand) => {
+      return saveNewItem(command);
+    },
+    [saveNewItem]
+  );
 
   useEffect(() => {
     fetchItems().then(() => {
@@ -29,7 +37,7 @@ const IndexPage: NextPage = () => {
     <div>
       <p>lol</p>
       <GalleryItem storage={items} />
-      <ModalRegisterNewItem />
+      <ModalRegisterNewItem onSave={registerNewItem} />
     </div>
   );
 };

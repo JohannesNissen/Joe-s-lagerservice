@@ -11,5 +11,7 @@ namespace Application.Items
     public int TotalInStock { get; set; }
     public int UsedInOffice { get; set; }
     public int AmountLentOut { get; set; }
+    public string Description { get; set; }
+    public bool Borrowable { get; set; }
   }
 }
