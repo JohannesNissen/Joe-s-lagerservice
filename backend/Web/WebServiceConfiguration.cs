@@ -3,11 +3,8 @@ using Application.Common.Options;
 using FluentValidation.AspNetCore;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using NSwag;
 using NSwag.Generation.Processors.Security;
-using System.Linq;
 using Web.DocumentProcessors;
 using Web.Filters;
 using Web.Services;
@@ -21,6 +18,7 @@ namespace Web
     {
 
       services.Configure<EncryptionOptions>(configuration.GetSection(EncryptionOptions.Encryption));
+      services.Configure<MailOptions>(configuration.GetSection(MailOptions.MailSettings));
 
       services.AddCors(options =>
       {

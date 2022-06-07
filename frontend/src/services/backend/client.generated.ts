@@ -182,6 +182,52 @@ export class AuthFetchClient extends ClientBase {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
+    auth_SendMail(toEmail?: string | null | undefined, subject?: string | null | undefined, body?: string | null | undefined, attachments?: FileParameter[] | null | undefined, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/Auth/send";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (toEmail !== null && toEmail !== undefined)
+            content_.append("ToEmail", toEmail.toString());
+        if (subject !== null && subject !== undefined)
+            content_.append("Subject", subject.toString());
+        if (body !== null && body !== undefined)
+            content_.append("Body", body.toString());
+        if (attachments !== null && attachments !== undefined)
+            attachments.forEach(item_ => content_.append("Attachments", item_.data, item_.fileName ? item_.fileName : "Attachments") );
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processAuth_SendMail(_response));
+        });
+    }
+
+    protected processAuth_SendMail(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
     auth_Login(signal?: AbortSignal | undefined): Promise<string> {
         let url_ = this.baseUrl + "/api/Auth";
         url_ = url_.replace(/[?&]$/, "");
@@ -908,7 +954,8 @@ export enum UserRole {
 }
 
 export interface UserIdDto {
-    name?: number;
+    id?: number;
+    name?: string | null;
     email?: string | null;
     userRole?: UserRole;
 }

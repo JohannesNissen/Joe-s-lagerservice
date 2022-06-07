@@ -180,8 +180,11 @@ namespace Infrastructure.Persistence.Migrations
             b.Property<string>("LastModifiedBy")
                       .HasColumnType("nvarchar(max)");
 
+            b.Property<string>("Name")
+                .HasColumnType("nvarchar(max)");
+
             b.Property<string>("Password")
-                      .HasColumnType("nvarchar(max)");
+                .HasColumnType("nvarchar(max)");
 
             b.Property<int>("UserRole")
                       .HasColumnType("int");
