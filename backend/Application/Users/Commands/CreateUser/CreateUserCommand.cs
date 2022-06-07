@@ -43,7 +43,7 @@ namespace Application.Users.Commands.CreateUser
           Email = request.Email,
           Password = _encryption_service.EncryptToAES(request.Password),
           UserRole = request.UserRole,
-          ItemsLent = new List<Item>()
+          ItemsLent = new List<BorrowedItem>()
         };
 
         _context.Users.Add(entity);

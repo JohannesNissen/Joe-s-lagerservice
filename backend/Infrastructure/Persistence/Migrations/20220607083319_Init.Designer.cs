@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220531203032_added_name_to_user")]
-    partial class added_name_to_user
+    [Migration("20220607083319_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,50 @@ namespace Infrastructure.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Domain.Entities.BorrowedItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BorrowedItem");
+                });
 
             modelBuilder.Entity("Domain.Entities.ExampleChild", b =>
                 {
@@ -127,10 +171,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("AmountLentOut")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Borrowable")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("LastModified")
@@ -148,12 +198,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("UsedInOffice")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Item");
                 });
@@ -195,6 +240,21 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Domain.Entities.BorrowedItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Item", "Item")
+                        .WithMany("Borrowed")
+                        .HasForeignKey("ItemId");
+
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("ItemsLent")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.ExampleChild", b =>
                 {
                     b.HasOne("Domain.Entities.ExampleParent", "Parent")
@@ -217,13 +277,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Item", b =>
-                {
-                    b.HasOne("Domain.Entities.User", null)
-                        .WithMany("ItemsLent")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Domain.Entities.ExampleParent", b =>
                 {
                     b.Navigation("Children");
@@ -231,6 +284,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Item", b =>
                 {
+                    b.Navigation("Borrowed");
+
                     b.Navigation("Images");
                 });
 

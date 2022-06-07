@@ -11,5 +11,9 @@ export const ItemContext = createContext<ItemContextType>({
   },
   saveNewItem: async (command: CreateItemCommand) => {
     return;
+  },
+  itemDetails: {},
+  fetchItemDetails: async (itemId: number) => {
+    return null;
   }
 });

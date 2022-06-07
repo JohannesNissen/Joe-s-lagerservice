@@ -10,227 +10,288 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Persistence.Migrations
 {
-  [DbContext(typeof(ApplicationDbContext))]
-  partial class ApplicationDbContextModelSnapshot : ModelSnapshot
-  {
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    [DbContext(typeof(ApplicationDbContext))]
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
 #pragma warning disable 612, 618
-      modelBuilder
-          .HasAnnotation("ProductVersion", "6.0.3")
-          .HasAnnotation("Relational:MaxIdentifierLength", 128);
+            modelBuilder
+                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-      SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-      modelBuilder.Entity("Domain.Entities.ExampleChild", b =>
-          {
-            b.Property<int>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnType("int");
+            modelBuilder.Entity("Domain.Entities.BorrowedItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-            b.Property<DateTimeOffset>("Created")
-                      .HasColumnType("datetimeoffset");
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
 
-            b.Property<string>("CreatedBy")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
-            b.Property<DateTimeOffset?>("LastModified")
-                      .HasColumnType("datetimeoffset");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<string>("LastModifiedBy")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
 
-            b.Property<string>("Name")
-                      .IsRequired()
-                      .HasMaxLength(200)
-                      .HasColumnType("nvarchar(200)");
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
 
-            b.Property<int>("ParentId")
-                      .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
-            b.Property<int>("Type")
-                      .HasColumnType("int");
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
-            b.HasKey("Id");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
-            b.HasIndex("ParentId");
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
 
-            b.ToTable("ExampleChildren");
-          });
+                    b.HasKey("Id");
 
-      modelBuilder.Entity("Domain.Entities.ExampleParent", b =>
-          {
-            b.Property<int>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnType("int");
+                    b.HasIndex("ItemId");
 
-            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.HasIndex("UserId");
 
-            b.Property<string>("Name")
-                      .IsRequired()
-                      .HasMaxLength(200)
-                      .HasColumnType("nvarchar(200)");
+                    b.ToTable("BorrowedItem");
+                });
 
-            b.HasKey("Id");
+            modelBuilder.Entity("Domain.Entities.ExampleChild", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-            b.ToTable("ExampleParents");
-          });
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-      modelBuilder.Entity("Domain.Entities.Image", b =>
-          {
-            b.Property<int>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnType("int");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
-            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<DateTimeOffset>("Created")
-                      .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
-            b.Property<string>("CreatedBy")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<string>("FilePath")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-            b.Property<int>("Index")
-                      .HasColumnType("int");
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
 
-            b.Property<int>("ItemId")
-                      .HasColumnType("int");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
-            b.Property<DateTimeOffset?>("LastModified")
-                      .HasColumnType("datetimeoffset");
+                    b.HasKey("Id");
 
-            b.Property<string>("LastModifiedBy")
-                      .HasColumnType("nvarchar(max)");
+                    b.HasIndex("ParentId");
 
-            b.HasKey("Id");
+                    b.ToTable("ExampleChildren");
+                });
 
-            b.HasIndex("ItemId");
+            modelBuilder.Entity("Domain.Entities.ExampleParent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-            b.ToTable("Image");
-          });
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-      modelBuilder.Entity("Domain.Entities.Item", b =>
-          {
-            b.Property<int>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.HasKey("Id");
 
-            b.Property<int>("AmountLentOut")
-                      .HasColumnType("int");
+                    b.ToTable("ExampleParents");
+                });
 
-            b.Property<bool>("Borrowable")
-                      .HasColumnType("bit");
+            modelBuilder.Entity("Domain.Entities.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-            b.Property<DateTimeOffset>("Created")
-                      .HasColumnType("datetimeoffset");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-            b.Property<string>("CreatedBy")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
-            b.Property<string>("Description")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<DateTimeOffset?>("LastModified")
-                      .HasColumnType("datetimeoffset");
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<string>("LastModifiedBy")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
 
-            b.Property<string>("Name")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
-            b.Property<int>("TotalInStock")
-                      .HasColumnType("int");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
-            b.Property<int>("UsedInOffice")
-                      .HasColumnType("int");
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
-            b.HasKey("Id");
+                    b.HasKey("Id");
 
-            b.ToTable("Item");
-          });
+                    b.HasIndex("ItemId");
 
-      modelBuilder.Entity("Domain.Entities.User", b =>
-          {
-            b.Property<int>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnType("int");
+                    b.ToTable("Image");
+                });
 
-            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+            modelBuilder.Entity("Domain.Entities.Item", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-            b.Property<DateTimeOffset>("Created")
-                      .HasColumnType("datetimeoffset");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-            b.Property<string>("CreatedBy")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<int>("AmountLentOut")
+                        .HasColumnType("int");
 
-            b.Property<string>("Email")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Borrowable")
+                        .HasColumnType("bit");
 
-            b.Property<DateTimeOffset?>("LastModified")
-                      .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
-            b.Property<string>("LastModifiedBy")
-                      .HasColumnType("nvarchar(max)");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<string>("Name")
-                .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-            b.Property<string>("Password")
-                .HasColumnType("nvarchar(max)");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
-            b.Property<int>("UserRole")
-                      .HasColumnType("int");
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
-            b.HasKey("Id");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-            b.ToTable("Users");
-          });
+                    b.Property<int>("TotalInStock")
+                        .HasColumnType("int");
 
-      modelBuilder.Entity("Domain.Entities.ExampleChild", b =>
-          {
-            b.HasOne("Domain.Entities.ExampleParent", "Parent")
-                      .WithMany("Children")
-                      .HasForeignKey("ParentId")
-                      .OnDelete(DeleteBehavior.Cascade)
-                      .IsRequired();
+                    b.Property<int>("UsedInOffice")
+                        .HasColumnType("int");
 
-            b.Navigation("Parent");
-          });
+                    b.HasKey("Id");
 
-      modelBuilder.Entity("Domain.Entities.Image", b =>
-          {
-            b.HasOne("Domain.Entities.Item", "Item")
-                      .WithMany("Images")
-                      .HasForeignKey("ItemId")
-                      .OnDelete(DeleteBehavior.Cascade)
-                      .IsRequired();
+                    b.ToTable("Item");
+                });
 
-            b.Navigation("Item");
-          });
+            modelBuilder.Entity("Domain.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-      modelBuilder.Entity("Domain.Entities.ExampleParent", b =>
-          {
-            b.Navigation("Children");
-          });
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-      modelBuilder.Entity("Domain.Entities.Item", b =>
-          {
-            b.Navigation("Images");
-          });
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
-      modelBuilder.Entity("Domain.Entities.User", b =>
-          {
-            b.Navigation("ItemsLent");
-          });
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserRole")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Domain.Entities.BorrowedItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Item", "Item")
+                        .WithMany("Borrowed")
+                        .HasForeignKey("ItemId");
+
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("ItemsLent")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ExampleChild", b =>
+                {
+                    b.HasOne("Domain.Entities.ExampleParent", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Image", b =>
+                {
+                    b.HasOne("Domain.Entities.Item", "Item")
+                        .WithMany("Images")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ExampleParent", b =>
+                {
+                    b.Navigation("Children");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Item", b =>
+                {
+                    b.Navigation("Borrowed");
+
+                    b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("Domain.Entities.User", b =>
+                {
+                    b.Navigation("ItemsLent");
+                });
 #pragma warning restore 612, 618
+        }
     }
-  }
 }
