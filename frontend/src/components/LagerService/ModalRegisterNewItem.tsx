@@ -94,7 +94,6 @@ const ModalRegisterNewItem: FC<Props> = ({ onSave }) => {
     toast
   ]);
 
-  //TODO: Modify this component to successfully create a new item
   return (
     <React.Fragment>
       <Modal size="xl" isOpen={isOpen} onClose={onClose}>

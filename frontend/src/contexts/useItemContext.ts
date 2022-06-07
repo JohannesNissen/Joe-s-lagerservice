@@ -30,7 +30,17 @@ const useItemContext: () => ItemContextType = () => {
 
   const saveNewItem = useCallback(async (command: CreateItemCommand) => {
     const itemClient = await client(ItemFetchClient);
-    await itemClient.item_CreateItem(command);
+    await itemClient.item_CreateItem(command).then(response => {
+      const item: ItemIdDto = {
+        id: response,
+        totalInStock: command.amountBought,
+        usedInOffice: command.reserveForOffice,
+        borrowable: command.borrowable,
+        name: command.name,
+        description: command.description
+      };
+      dispatchItems(items => [...items, item]);
+    });
   }, []);
   /**
    * GET /api/Item/{id}

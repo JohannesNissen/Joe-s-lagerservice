@@ -975,16 +975,16 @@ export interface EditItemDto {
 export interface ItemIdDto {
     id?: number;
     name?: string | null;
+    totalInStock?: number;
+    usedInOffice?: number;
+    amountLentOut?: number;
     description?: string | null;
     borrowable?: boolean;
-    amountAvailable?: number;
 }
 
 export interface ItemDetailsDto extends ItemIdDto {
     borrowedItems?: BorrowedItem[] | null;
-    totalInStock?: number;
-    usedInOffice?: number;
-    amountLentOut?: number;
+    amountAvailable?: number;
     item?: Item | null;
 }
 

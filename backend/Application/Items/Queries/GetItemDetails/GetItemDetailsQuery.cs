@@ -30,10 +30,12 @@ namespace Application.Items.Queries.GetItemDetails
         {
           Name = item.Name,
           BorrowedItems = new List<BorrowedItem>(item.Borrowed),
+          Borrowable = item.Borrowable,
           AmountAvailable = item.TotalInStock - item.AmountLentOut - item.UsedInOffice,
           TotalInStock = item.TotalInStock,
           AmountLentOut = item.AmountLentOut,
           UsedInOffice = item.UsedInOffice,
+          Description = item.Description,
         };
         return itemDto;
       }
