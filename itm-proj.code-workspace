@@ -50,8 +50,7 @@
     "plantuml.server": "https://www.plantuml.com/plantuml",
     "files.eol": "auto",
     "files.insertFinalNewline": true,
-    "cSpell.words": [
-      "encryptor"
-    ]
+    "cSpell.words": ["encryptor"],
+    "svg.preview.background": "white"
   }
 }
