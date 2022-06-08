@@ -17,7 +17,7 @@ const GalleryItem: FC<Props> = ({ storage }) => {
   return (
     <React.Fragment>
       <Flex
-        m={"60px 20em"}
+        m={"60px 15em"}
         wrap={"wrap"}
         justify={"flex-start"}
         gap={"15px"}
