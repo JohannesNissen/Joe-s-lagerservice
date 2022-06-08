@@ -1,7 +1,9 @@
 import "draft-js/dist/Draft.css";
 
+import { Heading, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import GalleryItem from "components/LagerService/GalleryItem";
 import ModalRegisterNewItem from "components/LagerService/ModalRegisterNewItem";
+import PageHeader from "components/LagerService/PageHeader";
 import useItemContext from "contexts/useItemContext";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -36,7 +38,39 @@ const IndexPage: NextPage = () => {
   return (
     <div>
       <p>lol</p>
-      <GalleryItem storage={items} />
+      <PageHeader sizeMultiplier={2} />
+      <Tabs isFitted mx={8} align="start" size="lg" isLazy={true}>
+        <TabList mb="1em" my={8}>
+          <Tab _active={{ color: "blue.100", borderBottom: "solid 1px" }}>
+            <Stack>
+              <Heading fontWeight={900} fontSize={{ base: "sm", sm: "sm", md: "lg" }}>
+                Storage
+              </Heading>
+            </Stack>
+          </Tab>
+          <Tab _active={{ color: "blue.100", borderBottom: "solid 1px" }}>
+            <Stack>
+              <Heading fontWeight={900} fontSize={{ base: "sm", sm: "sm", md: "lg" }}>
+                Admin panel
+              </Heading>
+            </Stack>
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <GalleryItem storage={items} />
+          </TabPanel>
+          <TabPanel>
+            <Stack align="center">
+              <Heading size={"md"}>Kun for Admins</Heading>
+            </Stack>
+            {/* <ServiceMessageList
+              serviceMessages={serviceMessages}
+              deleteServiceMessage={deleteServiceMessage}
+            /> */}
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
       <ModalRegisterNewItem onSave={registerNewItem} />
     </div>
   );
