@@ -14,10 +14,13 @@ import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { I18nProps } from "next-rosetta";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 const IndexPage: NextPage = () => {
   const router = useRouter();
+
+  const [, setEmail] = useState<string>("");
+  const [, setPassword] = useState<string>("");
 
   const Login = useCallback(() => {
     router.push(`/gallery/`);
@@ -30,27 +33,49 @@ const IndexPage: NextPage = () => {
       height="100vh"
       padding={"10rem"}
       maxW="1x1"
-      bgGradient="linear(to-t, blue.400, blue.600)">
-      <PageHeader sizeMultiplier={10} invert />
+      bgGradient="linear(to-b, navi.500, navi.900)">
+      <PageHeader sizeMultiplier={9} invert frontPage_styling />
       <HStack justify={"center"} height="70vh">
-        <VStack width="25vw" align={"flex-start"}>
+        <VStack
+          px="5vw"
+          py="5vh"
+          bgColor={"whiteAlpha.100"}
+          width="25vw"
+          align={"flex-start"}
+          boxShadow="md"
+          borderRadius={"10px"}>
           <Stack flex={2} />
-          <Stack flex={4} width="100%">
-            <FormControl color={"whitesmoke"} fontSize="lg">
-              <FormLabel color={"whitesmoke"} fontSize="lg">
-                Email
-              </FormLabel>
-              <Input type="email" />
+          <Stack flex={4} width="100%" direction={"column"} align={"flex-start"} fontSize="lg">
+            <FormControl>
+              <FormLabel color={"whitesmoke"}>Email</FormLabel>
+              <Input
+                type="email"
+                backgroundColor={"white"}
+                _focus={{
+                  border: "1px black"
+                }}
+                placeholder="larsen.lars@gmail.com"
+                _placeholder={{
+                  opacity: 0.75,
+                  color: "gray.300"
+                }}
+                onChange={e => setEmail(e.target.value)}
+              />
             </FormControl>
-            <LineBreak breaks={2} />
-            <FormControl color={"whitesmoke"} fontSize="lg">
-              <FormLabel color={"whitesmoke"} fontSize="lg">
-                Password
-              </FormLabel>
-              <Input type="password" />
+            <LineBreak breaks={1} />
+            <FormControl>
+              <FormLabel color={"whitesmoke"}>Password</FormLabel>
+              <Input
+                type="password"
+                backgroundColor={"white"}
+                _focus={{
+                  border: "1px black"
+                }}
+                onChange={e => setPassword(e.target.value)}
+              />
             </FormControl>
             <LineBreak />
-            <Button onClick={Login} type="submit" colorScheme="teal">
+            <Button onClick={Login} alignSelf="center" width={"50%"} colorScheme="green">
               Login
             </Button>
           </Stack>
