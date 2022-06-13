@@ -1,6 +1,8 @@
 using Application.Items;
+using Application.Items.Commands.BorrowItem;
 using Application.Items.Commands.CreateItem;
 using Application.Items.Commands.EditItem;
+using Application.Items.Commands.ReviewBorrowRequest;
 using Application.Items.Commands.UploadImage;
 using Application.Items.Queries.GetAllItems;
 using Application.Items.Queries.GetItemDetails;
@@ -49,6 +51,19 @@ namespace Web.Controllers
     public async Task<ActionResult<ItemDetailsDto>> GetItemDetails([FromRoute] int itemId, CancellationToken cancellationToken)
     {
       return await Mediator.Send(new GetItemDetailsQuery { Id = itemId }, cancellationToken);
+    }
+
+    [HttpPost("Borrow")]
+    public async Task<ActionResult<int>> RequestToBorrow([FromBody] BorrowItemCommand request, CancellationToken cancellationToken)
+    {
+      return await Mediator.Send(request, cancellationToken);
+    }
+
+    [HttpPut("Borrow/{BorrowedItemId}")]
+    public async Task<ActionResult> ReviewBorrowRequest([FromRoute] int BorrowedItemId, [FromBody] ReviewBorrowRequestCommand request, CancellationToken cancellationToken)
+    {
+      await Mediator.Send(request, cancellationToken);
+      return NoContent();
     }
   }
 }

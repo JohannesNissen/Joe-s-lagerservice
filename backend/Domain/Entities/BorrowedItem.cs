@@ -1,5 +1,6 @@
 using System;
 using Domain.Common;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
@@ -11,6 +12,6 @@ namespace Domain.Entities
     public DateTime ExpirationDate { get; set; }
     public Item Item { get; set; }
     public int Amount { get; set; }
-
+    public BorrowedStatus Status { get; set; }
   }
 }

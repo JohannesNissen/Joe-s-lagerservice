@@ -14,6 +14,7 @@ namespace Application.Common.Interfaces
     DbSet<User> Users { get; set; }
     DbSet<Item> Items { get; set; }
     DbSet<Item> Images { get; set; }
+    DbSet<BorrowedItem> BorrowedItems { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
   }
 }

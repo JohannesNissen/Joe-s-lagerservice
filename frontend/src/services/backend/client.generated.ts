@@ -819,6 +819,88 @@ export class ItemFetchClient extends ClientBase {
         }
         return Promise.resolve<ItemDetailsDto>(null as any);
     }
+
+    item_RequestToBorrow(request: BorrowItemCommand, signal?: AbortSignal | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Item/Borrow";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processItem_RequestToBorrow(_response));
+        });
+    }
+
+    protected processItem_RequestToBorrow(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as number;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    item_ReviewBorrowRequest(borrowedItemId: number, request: ReviewBorrowRequestCommand, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/Item/Borrow/{BorrowedItemId}";
+        if (borrowedItemId === undefined || borrowedItemId === null)
+            throw new Error("The parameter 'borrowedItemId' must be defined.");
+        url_ = url_.replace("{BorrowedItemId}", encodeURIComponent("" + borrowedItemId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processItem_ReviewBorrowRequest(_response));
+        });
+    }
+
+    protected processItem_ReviewBorrowRequest(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
 }
 
 export class UserFetchClient extends ClientBase {
@@ -1002,6 +1084,7 @@ export interface BorrowedItem extends AuditableEntity {
     expirationDate?: Date;
     item?: Item | null;
     amount?: number;
+    status?: BorrowedStatus;
 }
 
 export interface User extends AuditableEntity {
@@ -1036,6 +1119,30 @@ export interface Image extends AuditableEntity {
     index?: number;
     filePath?: string | null;
     item?: Item | null;
+}
+
+export enum BorrowedStatus {
+    Requested = 0,
+    Accepted = 1,
+    Declined = 2,
+    Returned = 3,
+}
+
+export interface BorrowItemCommand {
+    userId?: number;
+    itemId?: number;
+    amount?: number;
+    startDate?: Date;
+    endDate?: Date;
+}
+
+export interface ReviewBorrowRequestCommand {
+    borrowedItemId?: number;
+    reviewerId?: number;
+    amount?: number;
+    startDate?: Date;
+    endDate?: Date;
+    status?: BorrowedStatus;
 }
 
 export interface CreateUserCommand {
