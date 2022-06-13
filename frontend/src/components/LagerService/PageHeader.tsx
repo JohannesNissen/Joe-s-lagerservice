@@ -1,6 +1,6 @@
 import { Avatar, Heading, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 
 type Props = {
   sizeMultiplier?: number;
@@ -10,14 +10,15 @@ type Props = {
 
 const HEADERSIZE = {
   1: "lg",
-  2: "xl"
+  2: "xl",
+  3: "2xl",
+  4: "3xl",
+  5: "4xl",
+  10: "9xl"
 };
 
 const PageHeader: FC<Props> = ({ sizeMultiplier = 1, invert, frontPage }) => {
-  const [showButton, setShowButton] = useState<boolean>(true);
-
   const router = useRouter();
-  const path = router.asPath;
 
   if (!frontPage)
     return (
@@ -48,8 +49,8 @@ const PageHeader: FC<Props> = ({ sizeMultiplier = 1, invert, frontPage }) => {
         <Stack flex={4} direction="row" justify="flex-start" align="center"></Stack>
         <Stack flex={1} direction="row" justify="center" align="center">
           <Heading
-            color={invert ? "White" : "Black"}
-            size={HEADERSIZE[sizeMultiplier]}
+            color={invert ? "whitesmoke" : "Black"}
+            fontSize={HEADERSIZE[sizeMultiplier]}
             cursor="pointer"
             onClick={() => router.push("/")}>
             Easy storage
