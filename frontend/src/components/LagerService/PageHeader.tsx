@@ -22,9 +22,17 @@ const PageHeader: FC<Props> = ({ sizeMultiplier = 1, invert, frontPage }) => {
 
   if (!frontPage)
     return (
-      <React.Fragment>
-        <Stack direction="row" mt="1rem" mb="3rem" border="2px black">
-          <Stack flex={1} direction="row" justify="center" align="center">
+      <>
+        <Stack
+          position="sticky"
+          top="0"
+          direction="row"
+          pt="1rem"
+          mb="2rem"
+          pb="1rem"
+          borderBottomWidth="2px"
+          bgColor="gray.100">
+          <Stack justify="center" align="center" flex={1}>
             <Heading
               color={invert ? "White" : "Black"}
               size={HEADERSIZE[sizeMultiplier]}
@@ -33,21 +41,19 @@ const PageHeader: FC<Props> = ({ sizeMultiplier = 1, invert, frontPage }) => {
               Easy storage
             </Heading>
           </Stack>
-          <Stack flex={4} direction="row" justify="flex-start" align="center"></Stack>
+          <Stack flex={5} direction="row"></Stack>
 
-          <Stack flex={1}>
+          <Stack flex={1} align="center">
             <Avatar name="Test User" />
           </Stack>
         </Stack>
-        {/* <Box height={"2px"} width="auto" borderWidth={"1px"} /> */}
-      </React.Fragment>
+      </>
     );
   else
     return (
-      <React.Fragment>
+      <>
         <Stack direction="row" my="3rem"></Stack>
-        <Stack flex={4} direction="row" justify="flex-start" align="center"></Stack>
-        <Stack flex={1} direction="row" justify="center" align="center">
+        <Stack flex={4} direction="row" justify="center" align="center">
           <Heading
             color={invert ? "whitesmoke" : "Black"}
             fontSize={HEADERSIZE[sizeMultiplier]}
@@ -55,12 +61,9 @@ const PageHeader: FC<Props> = ({ sizeMultiplier = 1, invert, frontPage }) => {
             onClick={() => router.push("/")}>
             Easy storage
           </Heading>
-          <Stack flex={1}>
-            <Avatar name="Test User" />
-          </Stack>
         </Stack>
-        {/* <Box height={"2px"} width="auto" borderWidth={"1px"} /> */}
-      </React.Fragment>
+        <Stack flex={1}></Stack>
+      </>
     );
 };
 
