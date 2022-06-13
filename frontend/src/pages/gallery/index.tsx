@@ -37,7 +37,6 @@ const IndexPage: NextPage = () => {
 
   return (
     <div>
-      <p>lol</p>
       <PageHeader sizeMultiplier={2} />
       <Tabs isFitted mx={8} align="start" size="lg" isLazy={true}>
         <TabList mb="1em" my={8}>

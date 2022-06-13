@@ -31,7 +31,7 @@ const IndexPage: NextPage = () => {
       padding={"10rem"}
       maxW="1x1"
       bgGradient="linear(to-t, blue.400, blue.600)">
-      <PageHeader sizeMultiplier={10} invert />
+      <PageHeader sizeMultiplier={10} invert frontPage />
       <HStack justify={"center"} height="70vh">
         <VStack width="25vw" align={"flex-start"}>
           <Stack flex={2} />
