@@ -31,10 +31,10 @@ const IndexPage: NextPage = () => {
   return (
     <Container
       height="100vh"
-      padding={"10vh"}
+      padding={"3vh"}
       maxW="1x1"
       bgGradient="linear(to-b, navi.500, navi.900)">
-      <PageHeader sizeMultiplier={9} invert frontPage_styling />
+      <PageHeader sizeMultiplier={8} invert frontPage_styling frontPage />
       <HStack justify={"center"} height="70vh">
         <VStack
           px="5vw"
