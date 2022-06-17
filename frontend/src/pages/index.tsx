@@ -31,7 +31,7 @@ const IndexPage: NextPage = () => {
   return (
     <Container
       height="100vh"
-      padding={"10rem"}
+      padding={"10vh"}
       maxW="1x1"
       bgGradient="linear(to-b, navi.500, navi.900)">
       <PageHeader sizeMultiplier={9} invert frontPage_styling />
@@ -41,6 +41,7 @@ const IndexPage: NextPage = () => {
           py="5vh"
           bgColor={"whiteAlpha.100"}
           width="25vw"
+          minW="500px"
           align={"flex-start"}
           boxShadow="md"
           borderRadius={"10px"}>
