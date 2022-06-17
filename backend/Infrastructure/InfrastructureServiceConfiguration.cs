@@ -29,6 +29,7 @@ namespace Infrastructure
         services.AddTransient<IDateTimeOffsetService, DateTimeOffsetService>();
         services.AddSingleton<IEncryptionService, EncryptionService>();
         services.AddSingleton<IImageService, LocalImageService>();
+        services.AddTransient<INotificationGenerator, NotificationGenerator>();
       }
 
 
