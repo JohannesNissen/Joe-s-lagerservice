@@ -1,12 +1,14 @@
 import { Avatar, Heading, Image, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
+import { NotificationIdDto } from "services/backend/client.generated";
 
 type Props = {
   sizeMultiplier?: number;
   frontPage_styling?: boolean;
   frontPage?: boolean;
   invert?: boolean;
+  notifications?: NotificationIdDto[];
 };
 
 const HEADERSIZE = {
@@ -31,7 +33,8 @@ const PageHeader: FC<Props> = ({
   sizeMultiplier = 1,
   invert,
   frontPage,
-  frontPage_styling = false
+  frontPage_styling = false,
+  notifications = []
 }) => {
   const router = useRouter();
 
