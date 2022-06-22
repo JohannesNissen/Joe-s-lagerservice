@@ -1,4 +1,4 @@
-import { Avatar, Heading, Stack } from "@chakra-ui/react";
+import { Avatar, Heading, Image, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
 
@@ -58,7 +58,14 @@ const PageHeader: FC<Props> = ({
           </Stack>
           <Stack flex={5} direction="row"></Stack>
 
-          <Stack flex={1} align="center">
+          <Stack direction="row" flex={1} pr="1rem" justify="flex-end">
+            <Image
+              cursor="pointer"
+              alt=""
+              boxSize="3.5rem"
+              fill="blue.200"
+              src="/images/NotificationBell/Blue.svg"
+            />
             <Avatar name="Test User" />
           </Stack>
         </Stack>

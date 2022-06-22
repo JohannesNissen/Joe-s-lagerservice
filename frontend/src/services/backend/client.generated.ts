@@ -228,6 +228,46 @@ export class AuthFetchClient extends ClientBase {
         return Promise.resolve<FileResponse>(null as any);
     }
 
+    auth_aaaaaaaa(request: CreateNotificationCommand, signal?: AbortSignal | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Auth/noti";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processAuth_aaaaaaaa(_response));
+        });
+    }
+
+    protected processAuth_aaaaaaaa(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as number;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
     auth_Login(signal?: AbortSignal | undefined): Promise<string> {
         let url_ = this.baseUrl + "/api/Auth";
         url_ = url_.replace(/[?&]$/, "");
@@ -821,6 +861,97 @@ export class ItemFetchClient extends ClientBase {
     }
 }
 
+export class NotificationFetchClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: ClientConfiguration, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    notification_CreateNotification(request: CreateNotificationCommand, signal?: AbortSignal | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Notification";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processNotification_CreateNotification(_response));
+        });
+    }
+
+    protected processNotification_CreateNotification(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as number;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    notification_getAllNotifications(userId: number, signal?: AbortSignal | undefined): Promise<NotificationIdDto[]> {
+        let url_ = this.baseUrl + "/api/Notification/userId";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processNotification_getAllNotifications(_response));
+        });
+    }
+
+    protected processNotification_getAllNotifications(response: Response): Promise<NotificationIdDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as NotificationIdDto[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<NotificationIdDto[]>(null as any);
+    }
+}
+
 export class UserFetchClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -907,6 +1038,19 @@ export class UserFetchClient extends ClientBase {
         }
         return Promise.resolve<UserIdDto[]>(null as any);
     }
+}
+
+export interface CreateNotificationCommand {
+    notificationType?: NotificationTypes;
+    userId?: number;
+}
+
+export enum NotificationTypes {
+    BorrowRequest = 0,
+    BorrowAnswer = 1,
+    RevokePermission = 2,
+    RegainPermissionRequest = 3,
+    RegainPermissionAnswer = 4,
 }
 
 export interface CreateExampleChildCommand {
@@ -1008,6 +1152,7 @@ export interface User extends AuditableEntity {
     id?: number;
     name?: string | null;
     email?: string | null;
+    lead?: User | null;
     password?: string | null;
     userRole?: UserRole;
     itemsLent?: BorrowedItem[] | null;
@@ -1038,9 +1183,18 @@ export interface Image extends AuditableEntity {
     item?: Item | null;
 }
 
+export interface NotificationIdDto {
+    senderId?: number;
+    recieverId?: number;
+    notificationType?: NotificationTypes;
+    seen?: boolean;
+    text?: string | null;
+}
+
 export interface CreateUserCommand {
     email?: string | null;
     password?: string | null;
+    leadId?: number;
     userRole?: UserRole;
 }
 
