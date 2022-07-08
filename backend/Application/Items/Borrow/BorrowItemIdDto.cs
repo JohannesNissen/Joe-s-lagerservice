@@ -1,10 +1,11 @@
 using System;
-using Domain.Common;
+using Application.Common.Mappings;
+using Domain.Entities;
 using Domain.Enums;
 
-namespace Domain.Entities
+namespace Application.Items
 {
-  public class BorrowedItem : AuditableEntity
+  public class BorrowedItemIdDto : IAutoMap<BorrowedItem>
   {
     public int Id { get; set; }
     public User User { get; set; }
