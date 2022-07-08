@@ -29,6 +29,7 @@ namespace Infrastructure.Persistence
     public DbSet<Item> Items { get; set; }
     public DbSet<Item> Images { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<BorrowedItem> BorrowedItems { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
