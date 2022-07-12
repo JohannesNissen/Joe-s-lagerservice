@@ -1,6 +1,6 @@
 import { Avatar, Heading, Image, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { FC } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { NotificationIdDto } from "services/backend/client.generated";
 
 type Props = {
@@ -9,6 +9,7 @@ type Props = {
   frontPage?: boolean;
   invert?: boolean;
   notifications?: NotificationIdDto[];
+  toggleNotifications: (boolean) => void;
 };
 
 const HEADERSIZE = {
@@ -34,23 +35,28 @@ const PageHeader: FC<Props> = ({
   invert,
   frontPage,
   frontPage_styling = false,
-  notifications = []
+  notifications = [],
+  toggleNotifications
 }) => {
   const router = useRouter();
+  const [showNotifications, setShowNotifications] = useState<boolean>(false);
+
+  const displayNotifocations = useCallback(() => {
+    setShowNotifications(!showNotifications);
+    toggleNotifications(!showNotifications);
+  }, [showNotifications, toggleNotifications]);
 
   if (!frontPage)
     return (
-      <>
+      <Stack direction="column" position="sticky" shadow={"2xl"}>
         <Stack
-          position="sticky"
           top="0"
           direction="row"
           pt="1rem"
-          mb="2rem"
           pb="1rem"
           borderBottomWidth="2px"
-          bgColor="gray.100">
-          <Stack justify="center" align="center" flex={1}>
+          bgColor="gray.50">
+          <Stack justify="center" px={20} align="center" flex={1}>
             <Heading
               color={invert ? "White" : "Black"}
               size={HEADERSIZE[sizeMultiplier]}
@@ -61,18 +67,19 @@ const PageHeader: FC<Props> = ({
           </Stack>
           <Stack flex={5} direction="row"></Stack>
 
-          <Stack direction="row" flex={1} pr="1rem" justify="flex-end">
+          <Stack direction="row" flex={1} pr="1rem" justify="flex-end" px={10}>
             <Image
               cursor="pointer"
               alt=""
-              boxSize="3.5rem"
+              boxSize="2.5rem"
               fill="blue.200"
               src="/images/NotificationBell/Blue.svg"
+              onClick={displayNotifocations}
             />
-            <Avatar name="Test User" />
+            <Avatar boxSize="2.5rem" name="Test User" />
           </Stack>
         </Stack>
-      </>
+      </Stack>
     );
   else
     return (

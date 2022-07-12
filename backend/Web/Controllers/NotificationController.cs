@@ -14,19 +14,20 @@ namespace Web.Controllers
       return await Mediator.Send(request, cancellationToken);
     }
 
-    [HttpGet("userId")]
+    [HttpGet("{userId}")]
     public async Task<ActionResult<List<NotificationIdDto>>> getAllNotifications([FromRoute] int userId, CancellationToken cancellationToken)
     {
-      return await Mediator.Send(new GetAllNotificationsQuery(), cancellationToken);
+      return await Mediator.Send(new GetAllNotificationsQuery { RecieverId = userId }, cancellationToken);
     }
 
     [HttpPut("notificationId")]
-    public async Task<ActionResult> UpdateStatus([FromRoute] int notificationId, [FromBody] bool status, CancellationToken cancellationToken)
+    public async Task<ActionResult> UpdateStatus([FromRoute] int notificationId, [FromBody] UpdateStatusDto statusDto, CancellationToken cancellationToken)
     {
       var dto = new UpdateStatusCommand
       {
-        NotificationId = notificationId,
-        status = status
+        RecieverId = statusDto.RecieverId,
+        NotificationId = statusDto.NotificationId,
+        status = statusDto.status
       };
       await Mediator.Send(dto, cancellationToken);
 

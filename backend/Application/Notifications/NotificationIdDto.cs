@@ -7,6 +7,7 @@ namespace Application.Notifications
 {
   public class NotificationIdDto : IAutoMap<Notification>
   {
+    public int Id { get; set; }
     public int SenderId { get; set; }
     public int RecieverId { get; set; }
     public NotificationTypes NotificationType { get; set; }

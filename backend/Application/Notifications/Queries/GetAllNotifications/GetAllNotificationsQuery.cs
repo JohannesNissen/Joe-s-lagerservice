@@ -14,6 +14,8 @@ namespace Application.Notifications.Queries.GetAllNotifications
   [TODOAuthorize]
   public class GetAllNotificationsQuery : IRequest<List<NotificationIdDto>>
   {
+
+    public int RecieverId { get; set; }
     public class GetAllNotificationsQueryHandler : IRequestHandler<GetAllNotificationsQuery, List<NotificationIdDto>>
     {
       private readonly IApplicationDbContext _dbContext;
@@ -27,6 +29,7 @@ namespace Application.Notifications.Queries.GetAllNotifications
       public async Task<List<NotificationIdDto>> Handle(GetAllNotificationsQuery request, CancellationToken cancellationToken)
       {
         var Notifications = await _dbContext.Notifications
+          .Where(noti => noti.RecieverId == request.RecieverId)
           .OrderByDescending(i => i.Id)
           .ProjectTo<NotificationIdDto>(_mapper.ConfigurationProvider)
           .ToListAsync();
