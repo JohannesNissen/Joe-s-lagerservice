@@ -45,6 +45,8 @@ namespace Application.Items.Commands.BorrowItem
           ExpirationDate = request.EndDate
         };
 
+        _context.BorrowedItems.Add(entity);
+        await _context.SaveChangesAsync(cancellationToken);
         var notification = new Notification
         {
           Seen = false,
@@ -52,9 +54,9 @@ namespace Application.Items.Commands.BorrowItem
           SenderId = user.Id,
           RecieverId = user.Lead.Id,
           NotificationType = NotificationTypes.borrowRequest,
+          ContentId = entity.Id
         };
 
-        _context.BorrowedItems.Add(entity);
         _context.Notifications.Add(notification);
         await _context.SaveChangesAsync(cancellationToken);
         return entity.Id;
