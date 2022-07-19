@@ -13,5 +13,6 @@ namespace Application.Notifications
     public NotificationTypes NotificationType { get; set; }
     public bool Seen { get; set; }
     public string Text { get; set; }
+    public int ContentId { get; set; }
   }
 }
