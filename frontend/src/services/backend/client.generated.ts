@@ -901,6 +901,178 @@ export class ItemFetchClient extends ClientBase {
         }
         return Promise.resolve<FileResponse>(null as any);
     }
+
+    item_getBorrowedItem(id: number, signal?: AbortSignal | undefined): Promise<BorrowedItemDto> {
+        let url_ = this.baseUrl + "/api/Item/borrow/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processItem_getBorrowedItem(_response));
+        });
+    }
+
+    protected processItem_getBorrowedItem(response: Response): Promise<BorrowedItemDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BorrowedItemDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<BorrowedItemDto>(null as any);
+    }
+}
+
+export class NotificationFetchClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: ClientConfiguration, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    notification_CreateNotification(request: CreateNotificationCommand, signal?: AbortSignal | undefined): Promise<number> {
+        let url_ = this.baseUrl + "/api/Notification";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processNotification_CreateNotification(_response));
+        });
+    }
+
+    protected processNotification_CreateNotification(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as number;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    notification_getAllNotifications(userId: number, signal?: AbortSignal | undefined): Promise<NotificationIdDto[]> {
+        let url_ = this.baseUrl + "/api/Notification/{userId}";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processNotification_getAllNotifications(_response));
+        });
+    }
+
+    protected processNotification_getAllNotifications(response: Response): Promise<NotificationIdDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as NotificationIdDto[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<NotificationIdDto[]>(null as any);
+    }
+
+    notification_UpdateStatus(notificationId: number, statusDto: UpdateStatusDto, signal?: AbortSignal | undefined): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/Notification/notificationId";
+        if (notificationId === undefined || notificationId === null)
+            throw new Error("The parameter 'notificationId' must be defined.");
+        url_ = url_.replace("{notificationId}", encodeURIComponent("" + notificationId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(statusDto);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processNotification_UpdateStatus(_response));
+        });
+    }
+
+    protected processNotification_UpdateStatus(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
 }
 
 export class UserFetchClient extends ClientBase {
@@ -1091,6 +1263,7 @@ export interface User extends AuditableEntity {
     id?: number;
     name?: string | null;
     email?: string | null;
+    lead?: User | null;
     password?: string | null;
     userRole?: UserRole;
     itemsLent?: BorrowedItem[] | null;
@@ -1145,9 +1318,49 @@ export interface ReviewBorrowRequestCommand {
     status?: BorrowedStatus;
 }
 
+export interface BorrowedItemDto {
+    id?: number;
+    userDisplayName?: string | null;
+    item?: number;
+    amount?: number;
+    startDate?: Date;
+    expirationDate?: Date;
+    status?: BorrowedStatus;
+}
+
+export interface CreateNotificationCommand {
+    notificationType?: NotificationTypes;
+    userId?: number;
+}
+
+export enum NotificationTypes {
+    BorrowRequest = 0,
+    BorrowAnswer = 1,
+    RevokePermission = 2,
+    RegainPermissionRequest = 3,
+    RegainPermissionAnswer = 4,
+}
+
+export interface NotificationIdDto {
+    id?: number;
+    senderId?: number;
+    recieverId?: number;
+    notificationType?: NotificationTypes;
+    seen?: boolean;
+    text?: string | null;
+    contentId?: number;
+}
+
+export interface UpdateStatusDto {
+    notificationId?: number;
+    status?: boolean;
+    recieverId?: number;
+}
+
 export interface CreateUserCommand {
     email?: string | null;
     password?: string | null;
+    leadId?: number;
     userRole?: UserRole;
 }
 

@@ -3,7 +3,9 @@ import "isomorphic-unfetch";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import { ItemContext } from "contexts/ItemContext";
+import { NotificationContext } from "contexts/notificationContext";
 import useItemContext from "contexts/useItemContext";
+import useNotificationContext from "contexts/useNotificationContext";
 import type { AppProps, NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
 import { I18nProvider } from "next-rosetta";
@@ -21,6 +23,7 @@ const MyApp = ({ Component, pageProps, __N_SSG }: AppProps): ReactElement => {
   // usePWA(); //! OPT IN
 
   const itemContextValue = useItemContext();
+  const notificationContextValue = useNotificationContext();
 
   return (
     <main>
@@ -45,7 +48,9 @@ const MyApp = ({ Component, pageProps, __N_SSG }: AppProps): ReactElement => {
               return (
                 <ChakraProvider theme={theme}>
                   <ItemContext.Provider value={itemContextValue}>
-                    <Component {...pageProps} />
+                    <NotificationContext.Provider value={notificationContextValue}>
+                      <Component {...pageProps} />
+                    </NotificationContext.Provider>
                   </ItemContext.Provider>
                 </ChakraProvider>
               );

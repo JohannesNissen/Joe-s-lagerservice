@@ -17,6 +17,7 @@ namespace Application.Users.Commands.CreateUser
   {
     public string Email { get; set; }
     public string Password { get; set; }
+    public int LeadId { get; set; }
     public UserRole UserRole { get; set; }
 
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, int>
@@ -43,6 +44,7 @@ namespace Application.Users.Commands.CreateUser
           Email = request.Email,
           Password = _encryption_service.EncryptToAES(request.Password),
           UserRole = request.UserRole,
+          Lead = await _context.Users.FirstOrDefaultAsync(user => user.Id == request.LeadId),
           ItemsLent = new List<BorrowedItem>()
         };
 

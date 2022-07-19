@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Security;
+using Domain.Entities;
 using Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,17 @@ namespace Application.Items.Commands.ReviewBorrowRequest
         if (request.Amount > 0) BorrowedItem.Amount = request.Amount;
         if (request.StartDate > DateTime.MinValue) BorrowedItem.StartDate = request.StartDate;
         if (request.EndDate > DateTime.MinValue) BorrowedItem.ExpirationDate = request.EndDate;
+
+        var notification = new Notification
+        {
+          Seen = false,
+          NotificationType = NotificationTypes.borrowAnswer,
+          RecieverId = BorrowedItem.User.Id,
+          SenderId = BorrowedItem.User.Lead.Id,
+          Text = request.Status == BorrowedStatus.Accepted ? $"You can borrow requested item(s) from {request.StartDate} to {request.EndDate}" : "Your request was denied",
+        };
+
+        _context.Notifications.Add(notification);
 
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

@@ -3,6 +3,7 @@ using Application.Items.Commands.BorrowItem;
 using Application.Items.Commands.CreateItem;
 using Application.Items.Commands.EditItem;
 using Application.Items.Commands.ReviewBorrowRequest;
+using Application.Items.Queries.GetSingleBorrowRequest;
 using Application.Items.Commands.UploadImage;
 using Application.Items.Queries.GetAllItems;
 using Application.Items.Queries.GetItemDetails;
@@ -64,6 +65,12 @@ namespace Web.Controllers
     {
       await Mediator.Send(request, cancellationToken);
       return NoContent();
+    }
+
+    [HttpGet("borrow/{id}")]
+    public async Task<ActionResult<BorrowedItemDto>> getBorrowedItem([FromRoute] int id, CancellationToken cancellationToken)
+    {
+      return await Mediator.Send(new GetSingleBorrowRequestQuery { RequestId = id }, cancellationToken);
     }
   }
 }

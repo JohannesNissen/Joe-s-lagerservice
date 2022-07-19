@@ -1,10 +1,12 @@
 import "draft-js/dist/Draft.css";
 
-import { Heading, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Heading, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import GalleryItem from "components/LagerService/GalleryItem";
 import ModalRegisterNewItem from "components/LagerService/ModalRegisterNewItem";
+import NotificationsComponent from "components/LagerService/NotificationsComponent";
 import PageHeader from "components/LagerService/PageHeader";
 import useItemContext from "contexts/useItemContext";
+import useNotificationContext from "contexts/useNotificationContext";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -18,9 +20,9 @@ const NewItemHeaders = {
 
 const IndexPage: NextPage = () => {
   const { items, fetchItems, saveNewItem } = useItemContext();
+  const { notifications, getNotifications } = useNotificationContext();
 
   useRouter();
-  const [, setDone] = useState<boolean>(false);
 
   const registerNewItem = useCallback(
     (command: CreateItemCommand) => {
@@ -30,16 +32,41 @@ const IndexPage: NextPage = () => {
   );
 
   useEffect(() => {
-    fetchItems().then(() => {
-      setDone(true);
-    });
-  }, [fetchItems]);
+    fetchItems();
+    getNotifications(1);
+  }, [fetchItems, getNotifications]);
+
+  const [showNotifications, setShowNotifications] = useState<boolean>(false);
+  const displayNotifocations = useCallback(() => {
+    setShowNotifications(!showNotifications);
+  }, [showNotifications]);
 
   return (
-    <div>
-      <PageHeader sizeMultiplier={2} />
-      <Tabs isFitted mx={8} align="start" size="lg" isLazy={true}>
-        <TabList mb="1em" my={8}>
+    <div style={{ position: "relative" }}>
+      <PageHeader
+        toggleNotifications={displayNotifocations}
+        sizeMultiplier={1}
+        notifications={notifications}
+      />
+      <HStack
+        justify="flex-end"
+        position="absolute"
+        right={0}
+        mr={10}
+        zIndex={100}
+        bgColor="white"
+        borderRadius={5}
+        display={showNotifications ? "flex" : "none"}>
+        {notifications && (
+          <NotificationsComponent
+            notifications={notifications}
+            width={20}
+            show={showNotifications}
+          />
+        )}
+      </HStack>
+      <Tabs isFitted mx={8} align="start" mt="1rem" size="lg" isLazy={true}>
+        <TabList mb="1em">
           <Tab _active={{ color: "blue.100", borderBottom: "solid 1px" }}>
             <Stack>
               <Heading fontWeight={900} fontSize={{ base: "sm", sm: "sm", md: "lg" }}>

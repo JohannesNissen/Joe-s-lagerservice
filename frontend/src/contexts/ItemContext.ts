@@ -15,5 +15,9 @@ export const ItemContext = createContext<ItemContextType>({
   itemDetails: {},
   fetchItemDetails: async (itemId: number) => {
     return null;
-  }
+  },
+  fetchBorrowRequest: async (requestId: number) => {
+    return {};
+  },
+  singleBorrowRequest: {}
 });

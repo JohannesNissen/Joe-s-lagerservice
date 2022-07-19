@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { client } from "services/backend/client";
 import {
+  BorrowedItemDto,
   CreateItemCommand,
   ItemDetailsDto,
   ItemFetchClient,
@@ -13,11 +14,14 @@ export interface ItemContextType {
   saveNewItem: (command: CreateItemCommand) => Promise<void>;
   itemDetails: ItemDetailsDto;
   fetchItemDetails: (itemId: number) => Promise<void>;
+  fetchBorrowRequest: (requestId: number) => Promise<BorrowedItemDto>;
+  singleBorrowRequest: BorrowedItemDto;
 }
 
 const useItemContext: () => ItemContextType = () => {
   const [items, dispatchItems] = useState<ItemIdDto[]>([]);
   const [itemDetails, setItemDetails] = useState<ItemIdDto>({});
+  const [singleBorrowRequest, dispatchRequest] = useState<BorrowedItemDto>({});
 
   /**
    * GET /api/Item
@@ -51,6 +55,13 @@ const useItemContext: () => ItemContextType = () => {
     setItemDetails(fetchedItemDetails);
   }, []);
 
+  const fetchBorrowRequest = useCallback(async (requestId: number) => {
+    const itemClient = await client(ItemFetchClient);
+    const borrowRequest = await itemClient.item_getBorrowedItem(requestId);
+    dispatchRequest(borrowRequest);
+    return borrowRequest;
+  }, []);
+
   useEffect(() => {
     fetchItems();
   }, [fetchItems]);
@@ -60,7 +71,9 @@ const useItemContext: () => ItemContextType = () => {
     fetchItems,
     saveNewItem,
     itemDetails,
-    fetchItemDetails
+    fetchItemDetails,
+    fetchBorrowRequest,
+    singleBorrowRequest
   };
 };
 
