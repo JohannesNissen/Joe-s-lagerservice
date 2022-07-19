@@ -8,7 +8,7 @@ import {
 
 export interface NotificationContextType {
   notifications: NotificationIdDto[];
-  getNotifications: (userId: number) => Promise<void>;
+  getNotifications: (_userId: number) => Promise<void>;
   updateNotificationStatus: (
     userId: number,
     notificationId: number,
@@ -20,11 +20,12 @@ const useNotificationContext: () => NotificationContextType = () => {
   const [notifications, dispatchNotfications] = useState<NotificationIdDto[]>([]);
 
   const getNotifications = useCallback(
-    async (userId: number) => {
+    async (_userId: number) => {
       const notificationClient = await client(NotificationFetchClient);
-      await notificationClient.notification_getAllNotifications(userId).then(response => {
-        dispatchNotfications(response);
-      });
+      await notificationClient
+        .notification_getAllNotifications(_userId)
+        .then(response => dispatchNotfications(response));
+      // .catch(error => logger(`Error: ${error}`));
     },
     [dispatchNotfications]
   );

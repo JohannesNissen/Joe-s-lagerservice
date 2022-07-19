@@ -57,7 +57,13 @@ const IndexPage: NextPage = () => {
         bgColor="white"
         borderRadius={5}
         display={showNotifications ? "flex" : "none"}>
-        <NotificationsComponent notifications={notifications} width={20} show={showNotifications} />
+        {notifications && (
+          <NotificationsComponent
+            notifications={notifications}
+            width={20}
+            show={showNotifications}
+          />
+        )}
       </HStack>
       <Tabs isFitted mx={8} align="start" mt="1rem" size="lg" isLazy={true}>
         <TabList mb="1em">

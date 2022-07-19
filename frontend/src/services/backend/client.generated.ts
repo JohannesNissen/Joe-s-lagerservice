@@ -901,6 +901,45 @@ export class ItemFetchClient extends ClientBase {
         }
         return Promise.resolve<FileResponse>(null as any);
     }
+
+    item_getBorrowedItem(id: number, signal?: AbortSignal | undefined): Promise<BorrowedItemDto> {
+        let url_ = this.baseUrl + "/api/Item/borrow/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processItem_getBorrowedItem(_response));
+        });
+    }
+
+    protected processItem_getBorrowedItem(response: Response): Promise<BorrowedItemDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BorrowedItemDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<BorrowedItemDto>(null as any);
+    }
 }
 
 export class NotificationFetchClient extends ClientBase {
@@ -1279,6 +1318,16 @@ export interface ReviewBorrowRequestCommand {
     status?: BorrowedStatus;
 }
 
+export interface BorrowedItemDto {
+    id?: number;
+    userDisplayName?: string | null;
+    item?: number;
+    amount?: number;
+    startDate?: Date;
+    expirationDate?: Date;
+    status?: BorrowedStatus;
+}
+
 export interface CreateNotificationCommand {
     notificationType?: NotificationTypes;
     userId?: number;
@@ -1299,6 +1348,7 @@ export interface NotificationIdDto {
     notificationType?: NotificationTypes;
     seen?: boolean;
     text?: string | null;
+    contentId?: number;
 }
 
 export interface UpdateStatusDto {
