@@ -15,7 +15,6 @@ namespace Domain.Entities
     public bool Borrowable { get; set; }
 
     public virtual List<Image> Images { get; set; }
-    public virtual ICollection<BorrowedItem> Borrowed { get; set; }
 
   }
 }

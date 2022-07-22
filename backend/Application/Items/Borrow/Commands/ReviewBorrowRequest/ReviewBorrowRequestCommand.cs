@@ -31,6 +31,7 @@ namespace Application.Items.Commands.ReviewBorrowRequest
       {
         var BorrowedItem = await _context.BorrowedItems.Include(BorrowedItem => BorrowedItem.User)
           .FirstOrDefaultAsync(BorrowedItem => BorrowedItem.Id == request.BorrowedItemId);
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == BorrowedItem.UserId);
 
         BorrowedItem.Status = request.Status;
         if (request.Amount > 0) BorrowedItem.Amount = request.Amount;
@@ -42,7 +43,7 @@ namespace Application.Items.Commands.ReviewBorrowRequest
           Seen = false,
           NotificationType = NotificationTypes.borrowAnswer,
           RecieverId = BorrowedItem.User.Id,
-          SenderId = BorrowedItem.User.Lead.Id,
+          SenderId = user.Lead.Id,
           Text = request.Status == BorrowedStatus.Accepted ? $"You can borrow requested item(s) from {request.StartDate} to {request.EndDate}" : "Your request was denied",
         };
 

@@ -25,11 +25,10 @@ namespace Application.Items.Queries.GetItemDetails
 
       public async Task<ItemDetailsDto> Handle(GetItemDetailsQuery request, CancellationToken cancellationToken)
       {
-        var item = await _context.Items.Include(it => it.Borrowed).FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
+        var item = await _context.Items.FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
         var itemDto = new ItemDetailsDto
         {
           Name = item.Name,
-          BorrowedItems = new List<BorrowedItem>(item.Borrowed),
           Borrowable = item.Borrowable,
           AmountAvailable = item.TotalInStock - item.AmountLentOut - item.UsedInOffice,
           TotalInStock = item.TotalInStock,
