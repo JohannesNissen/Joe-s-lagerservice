@@ -42,10 +42,10 @@ namespace Application.Users.Commands.CreateUser
         entity = new User
         {
           Email = request.Email,
-          Password = _encryption_service.EncryptToAES(request.Password),
+          Password = _encryption_service.GenerateHash(request.Password),
           UserRole = request.UserRole,
           Lead = await _context.Users.FirstOrDefaultAsync(user => user.Id == request.LeadId),
-          ItemsLent = new List<BorrowedItem>()
+          BorrowedItems = new List<BorrowedItem>()
         };
 
         _context.Users.Add(entity);

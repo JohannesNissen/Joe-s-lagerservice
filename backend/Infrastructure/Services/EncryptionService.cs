@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Options;
 using Application.Common.Interfaces;
 using Application.Common.Options;
@@ -10,6 +11,8 @@ namespace Infrastructure.Services
 {
   public class EncryptionService : IEncryptionService
   {
+
+    private const int SALTSIZE = 128 / 8;
 
     private readonly EncryptionOptions _options;
 
@@ -20,9 +23,41 @@ namespace Infrastructure.Services
 
     public string CreateHash(string plaintext)
     {
+      byte[] salt = RandomNumberGenerator.GetBytes(128 / 8); // divide by 8 to convert bits to bytes
+                                                             // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
+      string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+          password: plaintext,
+          salt: salt,
+          prf: KeyDerivationPrf.HMACSHA256,
+          iterationCount: 100000,
+          numBytesRequested: 256 / 8));
       throw new NotImplementedException();
     }
+    public static string CreateSalt(int size)
+    {
+      //Generate a cryptographic random number.
+      RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+      byte[] buff = new byte[size];
+      rng.GetBytes(buff);
+      return Convert.ToBase64String(buff);
+    }
 
+    public string GenerateHash(string input, bool useSalt = true)
+    {
+      var salt = useSalt ? CreateSalt(SALTSIZE) : "";
+      byte[] bytes = Encoding.UTF8.GetBytes(input);
+      SHA256Managed sHA256ManagedString = new SHA256Managed();
+      byte[] hash = sHA256ManagedString.ComputeHash(bytes);
+      return Convert.ToBase64String(hash) + salt;
+    }
+
+    public bool AreEqual(string plainTextInput, string hashedInput)
+    {
+
+      string newHashedPin = GenerateHash(plainTextInput, false);
+      Console.WriteLine($"new: {newHashedPin}\nold: {hashedInput}");
+      return newHashedPin == hashedInput.Substring(0, hashedInput.Length - 24);
+    }
     public string DecryptFromAes(string cipherText)
     {
       // Check arguments.

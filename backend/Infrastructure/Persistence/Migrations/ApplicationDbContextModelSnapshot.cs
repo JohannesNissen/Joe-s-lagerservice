@@ -66,7 +66,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BorrowedItems");
+                    b.ToTable("BorrowedItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ExampleChild", b =>
@@ -104,7 +104,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("ExampleChildren");
+                    b.ToTable("ExampleChildren", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ExampleParent", b =>
@@ -122,7 +122,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ExampleParents");
+                    b.ToTable("ExampleParents", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Image", b =>
@@ -158,7 +158,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("Image");
+                    b.ToTable("Image", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Item", b =>
@@ -201,7 +201,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Item");
+                    b.ToTable("Item", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
@@ -244,7 +244,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -286,7 +286,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LeadId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.BorrowedItem", b =>

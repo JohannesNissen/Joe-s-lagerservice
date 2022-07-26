@@ -289,3 +289,5 @@ obj/
 **/Logs/*.json
 **/NSwag/*-api.ts
 **/swagger/specification.json
+
+**/ConsoleTest

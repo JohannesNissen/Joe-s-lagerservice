@@ -1,5 +1,6 @@
 using Application.Users;
 using Application.Users.Commands.CreateUser;
+using Application.Users.Commands.VerifyUser;
 using Application.Users.Queries.GetAllUsers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +14,16 @@ namespace Web.Controllers
       return await Mediator.Send(command, cancellationToken);
     }
 
+    [HttpPost("login")]
+    public async Task<ActionResult<bool>> Login([FromBody] VerifyUserCommand command, CancellationToken cancellationToken)
+    {
+      return await Mediator.Send(command, cancellationToken);
+    }
+
     public async Task<ActionResult<List<UserIdDto>>> GetAllUsers(CancellationToken cancellationToken)
     {
       return await Mediator.Send(new GetAllUsersQuery(), cancellationToken);
     }
+
   }
 }

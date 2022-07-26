@@ -10,5 +10,9 @@ namespace Application.Common.Interfaces
 
     string CreateHash(string plaintext);
 
+    string GenerateHash(string input, bool useSalt = true);
+
+    bool AreEqual(string plainTextInput, string hashedInput);
+
   }
 }

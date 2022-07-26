@@ -36,7 +36,9 @@ namespace Web
       services.AddControllers(options =>
                        options.Filters.Add<ApiExceptionFilterAttribute>())
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<IApplicationDbContext>())
-                .AddNewtonsoftJson();
+                .AddNewtonsoftJson(
+                  options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
 
       services.Configure<ApiBehaviorOptions>(options =>
       {
