@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import LineBreak from "components/Common/LineBreak";
 import PageHeader from "components/LagerService/PageHeader";
+import useUserContext from "contexts/useUserContext";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -19,12 +20,15 @@ import React, { useCallback, useState } from "react";
 const IndexPage: NextPage = () => {
   const router = useRouter();
 
-  const [, setEmail] = useState<string>("");
-  const [, setPassword] = useState<string>("");
+  const { signIn } = useUserContext();
 
-  const Login = useCallback(() => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const Login = useCallback(async () => {
+    await signIn(email, password);
     router.push(`/gallery/`);
-  }, [router]);
+  }, [email, password, router, signIn]);
 
   //TODO: BackGrounds for input fields must be white when focused, and some other meaningful color when not
 
@@ -34,7 +38,15 @@ const IndexPage: NextPage = () => {
       padding={"3vh"}
       maxW="1x1"
       bgGradient="linear(to-b, navi.500, navi.900)">
-      <PageHeader sizeMultiplier={8} invert frontPage_styling frontPage />
+      <PageHeader
+        sizeMultiplier={8}
+        invert
+        frontPage_styling
+        frontPage
+        toggleNotifications={() => {
+          return;
+        }}
+      />
       <HStack justify={"center"} height="70vh">
         <VStack
           px="5vw"

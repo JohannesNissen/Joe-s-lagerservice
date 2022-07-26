@@ -1075,6 +1075,57 @@ export class NotificationFetchClient extends ClientBase {
     }
 }
 
+export class ProfileFetchClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: ClientConfiguration, baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super(configuration);
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    profile_getUserInfo(userId: number, signal?: AbortSignal | undefined): Promise<UserProfileDto> {
+        let url_ = this.baseUrl + "/api/Profile/{userId}";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processProfile_getUserInfo(_response));
+        });
+    }
+
+    protected processProfile_getUserInfo(response: Response): Promise<UserProfileDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as UserProfileDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserProfileDto>(null as any);
+    }
+}
+
 export class UserFetchClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -1160,6 +1211,46 @@ export class UserFetchClient extends ClientBase {
             });
         }
         return Promise.resolve<UserIdDto[]>(null as any);
+    }
+
+    user_Login(command: VerifyUserCommand, signal?: AbortSignal | undefined): Promise<boolean> {
+        let url_ = this.baseUrl + "/api/User/login";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUser_Login(_response));
+        });
+    }
+
+    protected processUser_Login(response: Response): Promise<boolean> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as boolean;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<boolean>(null as any);
     }
 }
 
@@ -1251,12 +1342,21 @@ export interface AuditableEntity {
 
 export interface BorrowedItem extends AuditableEntity {
     id?: number;
-    user?: User | null;
     startDate?: Date;
     expirationDate?: Date;
-    item?: Item | null;
     amount?: number;
     status?: BorrowedStatus;
+    userId?: number;
+    itemId?: number;
+    user?: User | null;
+    item?: Item | null;
+}
+
+export enum BorrowedStatus {
+    Requested = 0,
+    Accepted = 1,
+    Declined = 2,
+    Returned = 3,
 }
 
 export interface User extends AuditableEntity {
@@ -1266,7 +1366,7 @@ export interface User extends AuditableEntity {
     lead?: User | null;
     password?: string | null;
     userRole?: UserRole;
-    itemsLent?: BorrowedItem[] | null;
+    borrowedItems?: BorrowedItem[] | null;
 }
 
 export enum UserRole {
@@ -1292,13 +1392,6 @@ export interface Image extends AuditableEntity {
     index?: number;
     filePath?: string | null;
     item?: Item | null;
-}
-
-export enum BorrowedStatus {
-    Requested = 0,
-    Accepted = 1,
-    Declined = 2,
-    Returned = 3,
 }
 
 export interface BorrowItemCommand {
@@ -1357,6 +1450,18 @@ export interface UpdateStatusDto {
     recieverId?: number;
 }
 
+export interface UserIdDto {
+    id?: number;
+    name?: string | null;
+    email?: string | null;
+    userRole?: UserRole;
+}
+
+export interface UserProfileDto extends UserIdDto {
+    teamLead?: string | null;
+    borrowedItems?: BorrowedItemDto[] | null;
+}
+
 export interface CreateUserCommand {
     email?: string | null;
     password?: string | null;
@@ -1364,11 +1469,9 @@ export interface CreateUserCommand {
     userRole?: UserRole;
 }
 
-export interface UserIdDto {
-    id?: number;
-    name?: string | null;
+export interface VerifyUserCommand {
     email?: string | null;
-    userRole?: UserRole;
+    password?: string | null;
 }
 
 export enum CommandErrorCode {

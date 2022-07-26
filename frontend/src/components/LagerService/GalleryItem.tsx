@@ -17,14 +17,15 @@ const GalleryItem: FC<Props> = ({ storage }) => {
   return (
     <React.Fragment>
       <Flex
-        m={"60px 15em"}
+        width="fit-content"
+        m={"1rem 4.5rem"}
         wrap={"wrap"}
-        justify={"flex-start"}
+        justify="flex-start"
         gap={"15px"}
         align={"center"}
         direction={"row"}>
         {items.map((item, index) => (
-          <ItemCard key={index} item={item} />
+          <ItemCard key={index} maxW="20vw" item={item} />
         ))}
       </Flex>
     </React.Fragment>

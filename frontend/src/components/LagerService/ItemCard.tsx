@@ -7,6 +7,7 @@ import {
   Icon,
   Stack,
   Text,
+  Tooltip,
   useColorModeValue
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -22,9 +23,10 @@ const StatusColors = {
 
 type Props = {
   item: ItemIdDto;
+  maxW: string;
 };
 
-const ItemCard: FC<Props> = ({ item }) => {
+const ItemCard: FC<Props> = ({ item, maxW }) => {
   const router = useRouter();
 
   const accesibilityIconColor = useCallback(() => {
@@ -35,9 +37,9 @@ const ItemCard: FC<Props> = ({ item }) => {
   }, [item]);
 
   return (
-    <Center py={6}>
+    <Center py={4} maxW={maxW}>
       <Stack
-        margin="10px"
+        margin="0 10px"
         borderWidth="1px"
         borderRadius="lg"
         w={{ sm: "100%", md: "20rem" }}
@@ -47,9 +49,11 @@ const ItemCard: FC<Props> = ({ item }) => {
         boxShadow={"2xl"}
         padding={5}>
         <Stack flex={1} flexDirection="column" justifyContent="start" alignItems="center">
-          <Heading fontSize={"2xl"} fontFamily={"body"}>
-            {item.name}
-          </Heading>
+          <Tooltip label={item.name} placement="top" hasArrow>
+            <Heading fontSize={"2xl"} fontFamily={"body"} noOfLines={1}>
+              {item.name}
+            </Heading>
+          </Tooltip>
           <Box borderWidth="1px" borderRadius="lg" width="80%" height="60%">
             Image goes here
           </Box>

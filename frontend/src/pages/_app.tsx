@@ -6,6 +6,8 @@ import { ItemContext } from "contexts/ItemContext";
 import { NotificationContext } from "contexts/notificationContext";
 import useItemContext from "contexts/useItemContext";
 import useNotificationContext from "contexts/useNotificationContext";
+import { UserContext } from "contexts/UserContext";
+import useUserContext from "contexts/useUserContext";
 import type { AppProps, NextWebVitalsMetric } from "next/app";
 import Head from "next/head";
 import { I18nProvider } from "next-rosetta";
@@ -24,6 +26,7 @@ const MyApp = ({ Component, pageProps, __N_SSG }: AppProps): ReactElement => {
 
   const itemContextValue = useItemContext();
   const notificationContextValue = useNotificationContext();
+  const userContextValue = useUserContext();
 
   return (
     <main>
@@ -49,7 +52,9 @@ const MyApp = ({ Component, pageProps, __N_SSG }: AppProps): ReactElement => {
                 <ChakraProvider theme={theme}>
                   <ItemContext.Provider value={itemContextValue}>
                     <NotificationContext.Provider value={notificationContextValue}>
-                      <Component {...pageProps} />
+                      <UserContext.Provider value={userContextValue}>
+                        <Component {...pageProps} />
+                      </UserContext.Provider>
                     </NotificationContext.Provider>
                   </ItemContext.Provider>
                 </ChakraProvider>

@@ -1,4 +1,5 @@
 import { Avatar, Heading, Image, Stack } from "@chakra-ui/react";
+import useUserContext from "contexts/useUserContext";
 import { useRouter } from "next/router";
 import React, { FC, useCallback, useState } from "react";
 import { NotificationIdDto } from "services/backend/client.generated";
@@ -40,6 +41,7 @@ const PageHeader: FC<Props> = ({
 }) => {
   const router = useRouter();
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
+  const { user } = useUserContext();
 
   const displayNotifocations = useCallback(() => {
     setShowNotifications(!showNotifications);
@@ -76,7 +78,13 @@ const PageHeader: FC<Props> = ({
               src="/images/NotificationBell/Blue.svg"
               onClick={displayNotifocations}
             />
-            <Avatar boxSize="2.5rem" name="Test User" />
+            <Avatar
+              boxSize="2.5rem"
+              name="Test User"
+              onClick={() => {
+                router.push(`profile/${user.id}`);
+              }}
+            />
           </Stack>
         </Stack>
       </Stack>
