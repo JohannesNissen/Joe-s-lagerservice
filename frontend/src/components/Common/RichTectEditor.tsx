@@ -7,9 +7,10 @@ import { useQuill } from "react-quilljs";
 
 type Props = {
   onDescriptionChange: (HTML_text: string) => void;
+  initialDesctiption?: string;
 };
 
-const RichTextEditor: FC<Props> = ({ onDescriptionChange }) => {
+const RichTextEditor: FC<Props> = ({ onDescriptionChange, initialDesctiption = "" }) => {
   const theme = "snow";
   // const theme = "bubble";
 
@@ -51,6 +52,12 @@ const RichTextEditor: FC<Props> = ({ onDescriptionChange }) => {
   ];
 
   const { quill, quillRef } = useQuill({ theme, modules, formats, placeholder });
+
+  useEffect(() => {
+    if (quill) {
+      quill.clipboard.dangerouslyPasteHTML(initialDesctiption);
+    }
+  }, [initialDesctiption, quill]);
 
   useEffect(() => {
     if (quill) {
