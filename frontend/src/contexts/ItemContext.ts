@@ -1,5 +1,9 @@
 import { createContext } from "react";
-import { CreateItemCommand } from "services/backend/client.generated";
+import {
+  BorrowItemCommand,
+  CreateItemCommand,
+  ReviewBorrowRequestCommand
+} from "services/backend/client.generated";
 
 import useItemContext from "./useItemContext";
 
@@ -19,5 +23,14 @@ export const ItemContext = createContext<ItemContextType>({
   fetchBorrowRequest: async (requestId: number) => {
     return {};
   },
-  singleBorrowRequest: {}
+  singleBorrowRequest: {},
+  reviewBorrowRequest: async (id: number, request: ReviewBorrowRequestCommand) => {
+    return;
+  },
+  submitRequestToBorrowNewItem: async (request: BorrowItemCommand) => {
+    return;
+  },
+  EditItem: async (_id: number, _editDto: EditItemDto) => {
+    return;
+  }
 });

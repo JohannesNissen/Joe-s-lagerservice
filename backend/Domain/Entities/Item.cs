@@ -13,8 +13,9 @@ namespace Domain.Entities
     public int AmountLentOut { get; set; }
     public string Description { get; set; }
     public bool Borrowable { get; set; }
+    public string FilePath { get; set; }
 
-    public virtual List<Image> Images { get; set; }
+    // public virtual Image Image { get; set; }
     public virtual ICollection<BorrowedItem> Borrowed { get; set; }
 
   }

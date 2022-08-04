@@ -2,8 +2,10 @@ import "../styles.global.css";
 import "isomorphic-unfetch";
 
 import { ChakraProvider } from "@chakra-ui/react";
+import { ImageContext } from "contexts/ImageContext";
 import { ItemContext } from "contexts/ItemContext";
 import { NotificationContext } from "contexts/notificationContext";
+import { useImageContext } from "contexts/useImageContext";
 import useItemContext from "contexts/useItemContext";
 import useNotificationContext from "contexts/useNotificationContext";
 import { UserContext } from "contexts/UserContext";
@@ -27,6 +29,7 @@ const MyApp = ({ Component, pageProps, __N_SSG }: AppProps): ReactElement => {
   const itemContextValue = useItemContext();
   const notificationContextValue = useNotificationContext();
   const userContextValue = useUserContext();
+  const imageContextValue = useImageContext();
 
   return (
     <main>
@@ -53,7 +56,9 @@ const MyApp = ({ Component, pageProps, __N_SSG }: AppProps): ReactElement => {
                   <ItemContext.Provider value={itemContextValue}>
                     <NotificationContext.Provider value={notificationContextValue}>
                       <UserContext.Provider value={userContextValue}>
-                        <Component {...pageProps} />
+                        <ImageContext.Provider value={imageContextValue}>
+                          <Component {...pageProps} />
+                        </ImageContext.Provider>
                       </UserContext.Provider>
                     </NotificationContext.Provider>
                   </ItemContext.Provider>

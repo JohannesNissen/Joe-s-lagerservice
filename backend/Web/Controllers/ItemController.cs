@@ -4,7 +4,6 @@ using Application.Items.Commands.CreateItem;
 using Application.Items.Commands.EditItem;
 using Application.Items.Commands.ReviewBorrowRequest;
 using Application.Items.Queries.GetSingleBorrowRequest;
-using Application.Items.Commands.UploadImage;
 using Application.Items.Queries.GetAllItems;
 using Application.Items.Queries.GetItemDetails;
 using Microsoft.AspNetCore.Mvc;
@@ -19,16 +18,16 @@ namespace Web.Controllers
       return await Mediator.Send(command, cancellationToken);
     }
 
-    [HttpPost("{itemId}")]
-    [Consumes("multipart/form-data")]
-    public async Task<ActionResult<List<ImageIdDto>>> UploadImages([FromRoute] int itemId, ICollection<IFormFile> files)
-    {
-      return await Mediator.Send(new UploadImageCommand
-      {
-        ItemId = itemId,
-        ImageFiles = (List<IFormFile>)files
-      });
-    }
+    // [HttpPost("{itemId}")]
+    // [Consumes("multipart/form-data")]
+    // public async Task<ActionResult<List<ImageIdDto>>> UploadImages([FromRoute] int itemId, ICollection<IFormFile> files)
+    // {
+    //   return await Mediator.Send(new UploadImageCommand
+    //   {
+    //     ItemId = itemId,
+    //     ImageFiles = (List<IFormFile>)files
+    //   });
+    // }
 
     [HttpPut("{itemId}")]
     public async Task<ActionResult> EditItem([FromRoute] int itemId, [FromBody] EditItemDto editItemDto, CancellationToken cancellationToken)

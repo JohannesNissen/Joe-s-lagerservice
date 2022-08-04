@@ -16,7 +16,7 @@ namespace Web
 
     public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-
+      services.Configure<ImageOptions>(configuration.GetSection(ImageOptions.ImageSettings));
       services.Configure<EncryptionOptions>(configuration.GetSection(EncryptionOptions.Encryption));
       services.Configure<MailOptions>(configuration.GetSection(MailOptions.MailSettings));
 

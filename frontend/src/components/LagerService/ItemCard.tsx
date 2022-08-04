@@ -1,10 +1,10 @@
 import {
-  Box,
   Button,
   Center,
   Heading,
   HStack,
   Icon,
+  Image,
   Stack,
   Text,
   Tooltip,
@@ -37,7 +37,7 @@ const ItemCard: FC<Props> = ({ item, maxW }) => {
   }, [item]);
 
   return (
-    <Center py={4} maxW={maxW}>
+    <Center py={4} maxW={maxW} w="max-content" minW="250px" zIndex="auto">
       <Stack
         margin="0 10px"
         borderWidth="1px"
@@ -54,9 +54,9 @@ const ItemCard: FC<Props> = ({ item, maxW }) => {
               {item.name}
             </Heading>
           </Tooltip>
-          <Box borderWidth="1px" borderRadius="lg" width="80%" height="60%">
-            Image goes here
-          </Box>
+          <Stack justify="center" borderWidth="1px" borderRadius="lg" width="80%" height="50%">
+            <Image src={"https://localhost:5001" + item.filePath} alt={item.name} height="100%" />
+          </Stack>
           {/* <Text fontWeight={600} color={"gray.500"} size="sm" mb={4}>
             {`Total amount: ${item.totalInStock}`}
           </Text> */}

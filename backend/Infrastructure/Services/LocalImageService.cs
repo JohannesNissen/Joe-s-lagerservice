@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Application.Common.Options;
@@ -6,22 +7,29 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
 using MediatR;
+using Application.Common.Exceptions;
 
 namespace Infrastructure.Services
 {
   public class LocalImageService : IImageService
   {
 
-    private readonly ImageGalleryOptions _options;
+    private readonly ImageOptions _options;
 
-    public LocalImageService(IOptions<ImageGalleryOptions> options)
+    public LocalImageService(IOptions<ImageOptions> options)
     {
       _options = options.Value;
     }
 
-    public async Task<string> UploadImageAsync(int imageGalleryId, IFormFile imageFile, CancellationToken cancellationToken)
+    public async Task<string> UploadImageAsync(int imageGalleryId, IFormFile imageFile, CancellationToken cancellationToken, ImageType imageType = ImageType.ItemPicture)
     {
-      string storageFolderPath = Path.Combine(_options.LocalStorageDirectoryPath);
+      string storageFolderPath;
+      switch (imageType)
+      {
+        case ImageType.ProfilePicture: storageFolderPath = Path.Combine(_options.ProfileImagePath); break;
+        case ImageType.ItemPicture: storageFolderPath = Path.Combine(_options.LocalStorageDirectoryPath); break;
+        default: throw new BadRequestException();
+      }
       Directory.CreateDirectory(storageFolderPath);
 
       int imageNameIndex = 1;
@@ -58,16 +66,5 @@ namespace Infrastructure.Services
       return Task.FromResult(Unit.Value);
     }
 
-    public Task<Unit> DeleteImageGalleryAsync(int imageGalleryId, CancellationToken cancellationToken)
-    {
-      string folderPath = Path.Combine(_options.LocalStorageDirectoryPath, $"{imageGalleryId}");
-
-      if (Directory.Exists(folderPath))
-      {
-        Directory.Delete(folderPath, true);
-      }
-
-      return Task.FromResult(Unit.Value);
-    }
   }
 }
