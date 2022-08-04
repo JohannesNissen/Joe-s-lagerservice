@@ -31,7 +31,7 @@ namespace Application.Items.Commands.ReviewBorrowRequest
       {
         var BorrowedItem = await _context.BorrowedItems.Include(BorrowedItem => BorrowedItem.User)
           .FirstOrDefaultAsync(BorrowedItem => BorrowedItem.Id == request.BorrowedItemId);
-        var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == BorrowedItem.UserId);
+        var user = await _context.Users.Include(u => u.Lead).FirstOrDefaultAsync(user => user.Id == BorrowedItem.UserId);
 
         BorrowedItem.Status = request.Status;
         if (request.Amount > 0) BorrowedItem.Amount = request.Amount;

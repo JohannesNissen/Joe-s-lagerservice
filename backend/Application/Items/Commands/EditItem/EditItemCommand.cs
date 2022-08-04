@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
@@ -29,8 +28,7 @@ namespace Application.Items.Commands.EditItem
 
       public async Task<Unit> Handle(EditItemCommand request, CancellationToken cancellationToken)
       {
-        var item = await _context.Items.Include(ig => ig.Images)
-                                                        .FirstOrDefaultAsync(ig => ig.Id == request.Id);
+        var item = await _context.Items.FirstOrDefaultAsync(ig => ig.Id == request.Id);
         if (item == null)
         {
           throw new NotFoundException(nameof(Items), request.Id);
@@ -38,29 +36,12 @@ namespace Application.Items.Commands.EditItem
 
         var editDto = request.EditItemDto;
 
-        if (editDto.Images != null)
+        if (editDto.ImagesToDelete != 0)
         {
-          foreach (var imageDto in editDto.Images)
+          if (item.FilePath != null)
           {
-            var image = item.Images.FirstOrDefault(i => i.Id == imageDto.Id);
-            if (image == null)
-              continue;
-
-            image.Index = imageDto.Index;
-          }
-        }
-
-        if (editDto.ImagesToDelete != null)
-        {
-          foreach (int id in editDto.ImagesToDelete)
-          {
-            var image = item.Images.FirstOrDefault(i => i.Id == id);
-            if (image == null)
-            {
-              continue;
-            }
-            await _imageService.DeleteImageAsync(image.FilePath, cancellationToken);
-            item.Images.Remove(image);
+            await _imageService.DeleteImageAsync(item.FilePath, cancellationToken);
+            item.FilePath = null;
           }
         }
 
@@ -68,6 +49,8 @@ namespace Application.Items.Commands.EditItem
         item.Name = editDto.Name;
         item.TotalInStock = editDto.TotalInStock;
         item.UsedInOffice = editDto.UsedInOffice;
+        item.Description = editDto.Description;
+        item.Borrowable = editDto.Borrowable;
 
         await _context.SaveChangesAsync(cancellationToken);
 

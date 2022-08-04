@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Security;
 using AutoMapper;
-using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,8 +24,11 @@ namespace Application.Items.Queries.GetItemDetails
       public async Task<ItemDetailsDto> Handle(GetItemDetailsQuery request, CancellationToken cancellationToken)
       {
         var item = await _context.Items.FirstOrDefaultAsync(item => item.Id == request.Id, cancellationToken);
+
+
         var itemDto = new ItemDetailsDto
         {
+          ImagePath = item?.FilePath,
           Name = item.Name,
           Borrowable = item.Borrowable,
           AmountAvailable = item.TotalInStock - item.AmountLentOut - item.UsedInOffice,

@@ -14,5 +14,6 @@ namespace Application.Items
     public int AmountLentOut { get; set; }
     public string Description { get; set; }
     public bool Borrowable { get; set; }
+    public string FilePath { get; set; }
   }
 }
