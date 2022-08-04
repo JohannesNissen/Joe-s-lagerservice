@@ -16,7 +16,9 @@ namespace Domain.Entities
     [JsonIgnore]
     public string Password { get; set; }
     public UserRole UserRole { get; set; }
-
+    public string ImagePath { get; set; }
+    public bool Active { get; set; }
+    public bool CanBorrow { get; set; }
     public virtual ICollection<BorrowedItem> BorrowedItems { get; set; }
   }
 }

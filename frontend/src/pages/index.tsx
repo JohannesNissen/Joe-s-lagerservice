@@ -10,25 +10,30 @@ import {
 } from "@chakra-ui/react";
 import LineBreak from "components/Common/LineBreak";
 import PageHeader from "components/LagerService/PageHeader";
-import useUserContext from "contexts/useUserContext";
+import { UserContext } from "contexts/UserContext";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { I18nProps } from "next-rosetta";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 
 const IndexPage: NextPage = () => {
   const router = useRouter();
 
-  const { signIn } = useUserContext();
+  const { signIn, user } = useContext(UserContext);
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  useEffect(() => {
+    // Prefetch the dashboard page
+    // router.prefetch("/gallery/");
+    if (user) router.push("/gallery/");
+  }, []);
+
   const Login = useCallback(async () => {
-    await signIn(email, password);
-    router.push(`/gallery/`);
-  }, [email, password, router, signIn]);
+    await signIn(email, password).catch(error => alert(error));
+  }, [email, password, router, signIn, user]);
 
   //TODO: BackGrounds for input fields must be white when focused, and some other meaningful color when not
 

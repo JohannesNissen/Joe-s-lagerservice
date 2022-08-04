@@ -15,7 +15,7 @@ namespace Web.Controllers
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<bool>> Login([FromBody] VerifyUserCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<LoginUserDto>> Login([FromBody] VerifyUserCommand command, CancellationToken cancellationToken)
     {
       return await Mediator.Send(command, cancellationToken);
     }
