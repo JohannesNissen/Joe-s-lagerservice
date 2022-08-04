@@ -50,9 +50,9 @@ namespace Application.Users.Queries.GetUserProfile
           Id = user.Id,
           Email = user.Email,
           Name = user.Name,
-          TeamLead = user.Lead.Email,
+          TeamLead = user.Lead?.Email,
           UserRole = user.UserRole,
-          BorrowedItems = user.BorrowedItems.Select(item => new BorrowedItemDto
+          BorrowedItems = user.BorrowedItems?.Select(item => new BorrowedItemDto
           {
             Amount = item.Amount,
             Id = item.Id,
