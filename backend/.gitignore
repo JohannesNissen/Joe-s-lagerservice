@@ -291,3 +291,7 @@ obj/
 **/swagger/specification.json
 
 **/ConsoleTest
+
+**/Web/wwwroot/Items
+
+**/Web/wwwroot/Users
