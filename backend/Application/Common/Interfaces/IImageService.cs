@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using System.Threading;
 using MediatR;
+using Domain.Enums;
 
 namespace Application.Common.Interfaces
 {
@@ -18,11 +19,9 @@ namespace Application.Common.Interfaces
     /// This path may be relative to the current website, starting with a frontslash.
     /// Otherwise the path will be a full url.
     ///</returns>
-    Task<string> UploadImageAsync(int imageGalleryId, IFormFile imageFile, CancellationToken cancellationToken);
+    Task<string> UploadImageAsync(int imageGalleryId, IFormFile imageFile, CancellationToken cancellationToken, ImageType imageType = ImageType.ItemPicture);
 
     Task<Unit> DeleteImageAsync(string imagePath, CancellationToken cancellationToken);
-
-    Task<Unit> DeleteImageGalleryAsync(int imageGalleryId, CancellationToken cancellationToken);
 
   }
 }
