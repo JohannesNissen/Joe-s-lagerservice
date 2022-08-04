@@ -17,6 +17,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Text,
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
@@ -30,7 +31,7 @@ type Props = {
   onSave: (command: CreateItemCommand) => Promise<void>;
 };
 
-const ModalRegisterNewItem: FC<Props> = ({ onSave }) => {
+const ModalRegisterNewItem: FC<Props> = ({ onSave, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -96,7 +97,7 @@ const ModalRegisterNewItem: FC<Props> = ({ onSave }) => {
 
   return (
     <React.Fragment>
-      <Modal size="xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size="2xl" isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Register new item</ModalHeader>
@@ -175,7 +176,9 @@ const ModalRegisterNewItem: FC<Props> = ({ onSave }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Button onClick={onOpen}>Open Modal</Button>
+      <Text cursor="pointer" _hover={{ textDecoration: "underline" }} onClick={onOpen}>
+        {children}
+      </Text>
     </React.Fragment>
   );
 };

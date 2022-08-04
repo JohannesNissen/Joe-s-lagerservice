@@ -1,16 +1,16 @@
 import "draft-js/dist/Draft.css";
 
-import { Heading, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import GalleryItem from "components/LagerService/GalleryItem";
-import ModalRegisterNewItem from "components/LagerService/ModalRegisterNewItem";
-import NotificationsComponent from "components/LagerService/NotificationsComponent";
 import PageHeader from "components/LagerService/PageHeader";
-import useItemContext from "contexts/useItemContext";
-import useNotificationContext from "contexts/useNotificationContext";
+import { ItemContext } from "contexts/ItemContext";
+import { NotificationContext } from "contexts/notificationContext";
+import { UserContext } from "contexts/UserContext";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { CreateItemCommand } from "services/backend/client.generated";
+import { isAdmin } from "utils/isAdmin";
 
 const NewItemHeaders = {
   Choose_operation: "",
@@ -19,10 +19,12 @@ const NewItemHeaders = {
 };
 
 const IndexPage: NextPage = () => {
-  const { items, fetchItems, saveNewItem } = useItemContext();
-  const { notifications, getNotifications } = useNotificationContext();
+  const { items, fetchItems, saveNewItem } = useContext(ItemContext);
+  const { notifications, getNotifications } = useContext(NotificationContext);
 
-  useRouter();
+  const { user, users, fetchAllUsers } = useContext(UserContext);
+
+  const router = useRouter();
 
   const registerNewItem = useCallback(
     (command: CreateItemCommand) => {
@@ -34,7 +36,7 @@ const IndexPage: NextPage = () => {
   useEffect(() => {
     fetchItems();
     getNotifications(1);
-  }, [fetchItems, getNotifications]);
+  }, [fetchItems, getNotifications, router, user]);
 
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const displayNotifocations = useCallback(() => {
@@ -42,62 +44,17 @@ const IndexPage: NextPage = () => {
   }, [showNotifications]);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div>
       <PageHeader
         toggleNotifications={displayNotifocations}
         sizeMultiplier={1}
-        notifications={notifications}
+        pageTitle="Storage"
       />
-      <HStack
-        justify="flex-end"
-        position="absolute"
-        right={0}
-        mr={10}
-        zIndex={100}
-        bgColor="white"
-        borderRadius={5}
-        display={showNotifications ? "flex" : "none"}>
-        {notifications && (
-          <NotificationsComponent
-            notifications={notifications}
-            width={20}
-            show={showNotifications}
-          />
-        )}
+      <HStack w="fit-content" justify="center" align="start" mt="1rem">
+        <GalleryItem
+          storage={isAdmin(user) ? items : items.filter(item => item?.borrowable === true)}
+        />
       </HStack>
-      <Tabs isFitted mx={8} align="start" mt="1rem" size="lg" isLazy={true}>
-        <TabList mb="1em">
-          <Tab _active={{ color: "blue.100", borderBottom: "solid 1px" }}>
-            <Stack>
-              <Heading fontWeight={900} fontSize={{ base: "sm", sm: "sm", md: "lg" }}>
-                Storage
-              </Heading>
-            </Stack>
-          </Tab>
-          <Tab _active={{ color: "blue.100", borderBottom: "solid 1px" }}>
-            <Stack>
-              <Heading fontWeight={900} fontSize={{ base: "sm", sm: "sm", md: "lg" }}>
-                Admin panel
-              </Heading>
-            </Stack>
-          </Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <GalleryItem storage={items} />
-          </TabPanel>
-          <TabPanel>
-            <Stack align="center">
-              <Heading size={"md"}>Kun for Admins</Heading>
-            </Stack>
-            {/* <ServiceMessageList
-              serviceMessages={serviceMessages}
-              deleteServiceMessage={deleteServiceMessage}
-            /> */}
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-      <ModalRegisterNewItem onSave={registerNewItem} />
     </div>
   );
 };
