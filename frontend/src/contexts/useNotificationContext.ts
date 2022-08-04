@@ -8,6 +8,7 @@ import {
 
 export interface NotificationContextType {
   notifications: NotificationIdDto[];
+  resetNotifications: () => void;
   getNotifications: (_userId: number) => Promise<void>;
   updateNotificationStatus: (
     userId: number,
@@ -43,8 +44,13 @@ const useNotificationContext: () => NotificationContextType = () => {
     []
   );
 
+  const resetNotifications = useCallback(() => {
+    dispatchNotfications([]);
+  }, []);
+
   return {
     notifications,
+    resetNotifications,
     getNotifications,
     updateNotificationStatus
   };

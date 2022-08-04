@@ -54,11 +54,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <div style={{ position: "relative" }}>
-      <PageHeader
-        toggleNotifications={displayNotifocations}
-        sizeMultiplier={1}
-        notifications={notifications}
-      />
+      <PageHeader toggleNotifications={displayNotifocations} sizeMultiplier={1} />
       <Center pt={5}>
         <Heading>Registered Users</Heading>
       </Center>

@@ -13,25 +13,23 @@ import React from "react";
 import { FC } from "react";
 import { NotificationTypes } from "services/backend/client.generated";
 
+import ReviewBorrowRequest from "./ReviewBorrowRequest";
+
 type Props = {
-  initialRef: React.MutableRefObject<any>;
   onClose: () => void;
   contentId: number;
   notificationType: NotificationTypes;
 };
 
-const ReviewNotificationPopup: FC<Props> = ({
-  initialRef,
-  onClose,
-  notificationType,
-  contentId
-}) => {
+const ReviewNotificationPopup: FC<Props> = ({ onClose, notificationType, contentId }) => {
   const { singleBorrowRequest } = useItemContext();
 
   // const notification: any = useMemoAsync(async () => {
   //   if (notificationType == NotificationTypes.BorrowRequest)
   //     return await fetchBorrowRequest(contentId);
   // }, []);
+
+  if (notificationType == NotificationTypes.BorrowRequest) return <ReviewBorrowRequest />;
 
   return (
     <React.Fragment>
@@ -40,7 +38,7 @@ const ReviewNotificationPopup: FC<Props> = ({
       <ModalBody pb={6}>
         <FormControl>
           <FormLabel>First name</FormLabel>
-          <Input ref={initialRef} placeholder="First name" />
+          <Input placeholder="First name" />
         </FormControl>
 
         <FormControl mt={4}>

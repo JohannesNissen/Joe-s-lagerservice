@@ -1,15 +1,21 @@
-import { Avatar, Heading, Image, Stack } from "@chakra-ui/react";
-import useUserContext from "contexts/useUserContext";
+import { Heading, Stack, useDisclosure } from "@chakra-ui/react";
+import { ItemContext } from "contexts/ItemContext";
+import { NotificationContext } from "contexts/notificationContext";
+import { UserContext } from "contexts/UserContext";
 import { useRouter } from "next/router";
-import React, { FC, useCallback, useState } from "react";
-import { NotificationIdDto } from "services/backend/client.generated";
+import React, { FC, useCallback, useContext, useEffect, useState } from "react";
+import { CreateItemCommand, ItemIdDto } from "services/backend/client.generated";
+import { isAdmin } from "utils/isAdmin";
+
+import NavigationSettingsComponent from "./NavigationSettingComponent";
+import NotificationsComponent from "./NotificationsComponent";
 
 type Props = {
   sizeMultiplier?: number;
   frontPage_styling?: boolean;
   frontPage?: boolean;
   invert?: boolean;
-  notifications?: NotificationIdDto[];
+  pageTitle?: string;
   toggleNotifications: (boolean) => void;
 };
 
@@ -28,7 +34,7 @@ const HEADERSIZE = {
 };
 
 const FRONTPAGE_STYLE = {
-  "-webkit-text-stroke": "2px black"
+  WebkitTextStroke: "2px black"
 };
 
 const PageHeader: FC<Props> = ({
@@ -36,12 +42,41 @@ const PageHeader: FC<Props> = ({
   invert,
   frontPage,
   frontPage_styling = false,
-  notifications = [],
+  pageTitle = null,
   toggleNotifications
 }) => {
   const router = useRouter();
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
-  const { user } = useUserContext();
+  const { user, resetUser } = useContext(UserContext);
+  const { items, fetchItems, saveNewItem, resetItems, EditItem } = useContext(ItemContext);
+  const { resetNotifications, notifications } = useContext(NotificationContext);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const LogOut = useCallback(() => {
+    resetItems();
+    resetNotifications();
+    resetUser();
+    router.push("/");
+  }, [resetItems, resetNotifications, resetUser, router]);
+
+  useEffect(() => {
+    if (user === null) LogOut();
+  }, [router.pathname, user]);
+
+  const registerNewItem = useCallback(
+    (command: CreateItemCommand) => {
+      return saveNewItem(command);
+    },
+    [saveNewItem]
+  );
+
+  const addAmoutToItem = useCallback(
+    (item: ItemIdDto) => {
+      EditItem(item.id, item);
+    },
+    [EditItem]
+  );
 
   const displayNotifocations = useCallback(() => {
     setShowNotifications(!showNotifications);
@@ -58,32 +93,26 @@ const PageHeader: FC<Props> = ({
           pb="1rem"
           borderBottomWidth="2px"
           bgColor="gray.50">
-          <Stack justify="center" px={20} align="center" flex={1}>
+          <Stack justify="center" px={20} align="center">
             <Heading
               color={invert ? "White" : "Black"}
               size={HEADERSIZE[sizeMultiplier]}
               cursor="pointer"
-              onClick={() => router.push("/")}>
-              Easy storage
+              onClick={() => {
+                if (isAdmin(user)) router.push("/gallery");
+                else router.push("/");
+              }}>
+              Easy storage{pageTitle ? ` - ${pageTitle}` : ""}
             </Heading>
           </Stack>
           <Stack flex={5} direction="row"></Stack>
 
-          <Stack direction="row" flex={1} pr="1rem" justify="flex-end" px={10}>
-            <Image
-              cursor="pointer"
-              alt=""
-              boxSize="2.5rem"
-              fill="blue.200"
-              src="/images/NotificationBell/Blue.svg"
-              onClick={displayNotifocations}
-            />
-            <Avatar
-              boxSize="2.5rem"
-              name="Test User"
-              onClick={() => {
-                router.push(`profile/${user.id}`);
-              }}
+          <Stack direction="row" flex={1} pr="1rem" justify="flex-end" px={10} zIndex="dropdown">
+            <NotificationsComponent notifications={notifications} width={20} />
+            <NavigationSettingsComponent
+              LogOut={LogOut}
+              registerNewItem={registerNewItem}
+              addAmoutToItem={addAmoutToItem}
             />
           </Stack>
         </Stack>
